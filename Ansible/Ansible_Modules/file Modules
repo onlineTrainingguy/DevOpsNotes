@@ -1,0 +1,60 @@
+ #--------------------------File Module
+ # change file ownership, group and mode
+- file:
+    path: /etc/foo.conf
+    owner: foo
+    group: foo
+    # when specifying mode using octal numbers, add a leading 0
+    mode: 0644
+- file:
+    path: /work
+    owner: root
+    group: root
+    mode: 01777
+- file:
+    src: /file/to/link/to
+    dest: /path/to/symlink
+    owner: foo
+    group: foo
+    state: link
+- file:
+    src: '/tmp/{{ item.src }}'
+    dest: '{{ item.dest }}'
+    state: link
+  with_items:
+    - { src: 'x', dest: 'y' }
+    - { src: 'z', dest: 'k' }
+
+# touch a file, using symbolic modes to set the permissions (equivalent to 0644)
+- file:
+    path: /etc/foo.conf
+    state: touch
+    mode: "u=rw,g=r,o=r"
+
+# touch the same file, but add/remove some permissions
+- file:
+    path: /etc/foo.conf
+    state: touch
+    mode: "u+rw,g-wx,o-rwx"
+
+# touch again the same file, but dont change times
+# this makes the task idempotents
+- file:
+    path: /etc/foo.conf
+    state: touch
+    mode: "u+rw,g-wx,o-rwx"
+    modification_time: "preserve"
+    access_time: "preserve"
+
+# create a directory if it doesn't exist
+- file:
+    path: /etc/some_directory
+    state: directory
+    mode: 0755
+
+# updates modification and access time of given file
+- file:
+    path: /etc/some_file
+    state: file
+    mode: 0755
+    modification_time: now

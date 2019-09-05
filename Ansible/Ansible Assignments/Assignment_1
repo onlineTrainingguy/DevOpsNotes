@@ -1,0 +1,11 @@
+#---1 Create a Play book to install apache server on the destination server with yum module install only if the OS is 'Redhat' or 'CentOS' and version 7
+#   Hint:- ansible_distribution is the variable which can have possible values 'RedHat','CentOS','Ubuntu','Debian'
+#          ansible_distribution_version variable can have the value which can have the version of the linux           
+
+
+#--2. Create a play book to install apache server on RedHat and Ubuntu server    
+#     Hint:- Create an Ubuntu machine and install python on it, apt module is used instead of yum in Ubuntu and name of software is apache2 not httpd
+
+#--3 . Create a play book to create testuser1 and testuser2 on all the hosts (use loop)
+       Hint:- use "user" module
+	   

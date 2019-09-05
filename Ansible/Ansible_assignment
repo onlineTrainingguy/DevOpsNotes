@@ -1,0 +1,12 @@
+Assignment for Ansible
+
+Q1:-Create a Playbook which has 3 plays 
+   Play1 :- it will run on host1( it can be any host which is configured in your hosts file)
+            it will check the status of the path( say /tmp/test) and check whether it is a directory or not
+			if it is a directory then create /tmp/test directory to the slave machine
+   Play2: Create a file /tmp/test3.txt and write the content TEST into it (use copy module)
+   Play3:- Read the content of /tmp/test3.txt file and if it is TEST then create a directory /tmp/testing otherwise not to create the directory
+   
+
+   
+			

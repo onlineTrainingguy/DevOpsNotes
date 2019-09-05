@@ -1,0 +1,100 @@
+----------------Loops------------------
+
+
+- name: add several users
+  user:
+    name: "{{ item.name }}"
+    state: present
+    groups: "{{ item.groups }}"
+  with_items:
+    - { name: 'testuser1', groups: 'wheel' }
+    - { name: 'testuser2', groups: 'root' }
+	
+----------Loop with list
+	
+# This will run debug three times since the list is flattened
+- debug:
+    msg: "{{ item }}"
+  vars:
+    nested_list:
+      - - one
+        - two
+        - three
+  with_items: "{{ nested_list }}"
+
+# This will run debug once with the three items
+- debug:
+    msg: "{{ item }}"
+  vars:
+    nested_list:
+      - - one
+        - two
+        - three
+  with_items:
+    - "{{ nested_list }}"	
+
+
+----------Nested Loop
+
+- name: give users access to multiple databases
+  mysql_user:
+    name: "{{ item[0] }}"
+    priv: "{{ item[1] }}.*:ALL"
+    append_privs: yes
+    password: "foo"
+  with_nested:
+    - [ 'alice', 'bob' ]
+    - [ 'clientdb', 'employeedb', 'providerdb' ]
+
+# In  below script there will be a nested loop for user1 value 1,2 means loo
+---
+ - hosts: 172.31.27.53
+   vars:
+     user1:
+      - 1
+      - 2
+
+   tasks:
+    - name: Creating multiple users
+      debug:
+        msg: "{{ item }}"
+      with_nested:
+       - "{{ user1 }}"
+       - [ 3 , 4 ]
+
+# You can loop through the elements of a hash using with_dict like below:
+---
+ - hosts: 172.31.27.53
+   vars:
+     users:
+       raman:
+        name: raman
+        age: 40
+        Add:
+         city: Bangalore
+       test:
+        name: raj
+        age: 35
+        Add:
+         city: Delhi
+
+   tasks:
+    - name: Creating multiple users
+      debug:
+        msg: "{{ item.value.Add.city }} {{ item.value.name }}"
+      with_dict:
+       - "{{ users }}"
+
+	   
+# reading the local files using with_file
+
+---
+ - hosts: 172.31.27.53
+   tasks:
+    - name: reading the content of the files
+      debug:
+        msg: "{{ item }}"
+      with_file:
+       - /tmp/1.txt
+       - /tmp/2.txt
+	

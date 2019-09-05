@@ -1,0 +1,112 @@
+* Starting with the installation
+Installing the prerequisites:
+$ sudo apt install wget build-essential apache2 php libapache2-mod-php7.2 php-gd libgd-dev unzip postfix
+
+User and group configuration
+$ useradd nagios
+$ groupadd nagcmd
+$ usermod -a -G nagcmd nagios
+$ usermod -a -G nagios,nagcmd www-data
+
+Download and extract the Nagios core
+$ wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.2.0.tar.gz
+$ tar -xzf nagios*.tar.gz
+
+hostname nagios-server
+vi /etc/hostname
+bash
+
+You will have to configure it with the user and the group you have created earlier
+$ ./configure --with-nagios-group=nagios --with-command-group=nagcmd
+$ make all
+$ make install
+$ make install-commandmode 
+$ make install-init
+$ make install-config
+$ /usr/bin/install -c -m 644 sample-config/httpd.conf /etc/apache2/sites-available/nagios.conf
+
+Copy evenhandler directory to the nagios directory
+$ cp -R contrib/eventhandlers/ /usr/local/nagios/libexec/
+$ chown -R nagios:nagios /usr/local/nagios/libexec/eventhandlers
+
+Install the Nagios Plugins
+$ wget https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+$ tar -xzf nagios-plugins*.tar.gz
+
+Install the Nagios plugin's with the commands below
+$ ./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
+$ make
+$ make install 
+
+You can find the default configuration of Nagios in /usr/local/nagios/. We will configure Nagios and Nagios contact. Edit default nagios configuration with nano
+
+$ nano -c /usr/local/nagios/etc/nagios.cfg
+uncomment line 51 for the host monitor configuration.
+Save and exit.
+
+Add a new folder named servers.
+$ mkdir -p /usr/local/nagios/etc/servers
+
+Change the user and group for the new folder to nagios:
+$ chown nagios:nagios /usr/local/nagios/etc/servers
+
+Enable Apache modules
+$ sudo a2enmod rewrite
+$ sudo a2enmod cgi
+
+You can use the htpasswd command to configure a user nagiosadmin for the nagios web interface
+
+$ sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+
+Enable the Nagios virtualhost
+$ sudo ln -s /etc/apache2/sites-available/nagios.conf /etc/apache2/sites-enabled/
+
+Start Apache 
+$ service apache2 restart 
+
+When Nagios starts, you may see the following error 
+Starting nagios (via systemctl): nagios.serviceFailed
+DON'T WORRY WE CAN FIX IT
+FOLLOW THE COMMANDS
+$ cd /etc/init.d/
+If you could find the nagios file there in the folder 
+$ cp /etc/init.d/skeleton /etc/init.d/nagios
+$ nano /etc/init.d/nagios
+Paste this code at the end of the file
+----------------------------------------
+DESC="Nagios"
+NAME=nagios
+DAEMON=/usr/local/nagios/bin/$NAME
+DAEMON_ARGS="-d /usr/local/nagios/etc/nagios.cfg"
+PIDFILE=/usr/local/nagios/var/$NAME.lock
+-------------------------------------------------------------------
+Make it executable and start Nagios
+$ chmod +x /etc/init.d/nagios
+$ service apache2 restart
+WE DIDN'T FINISH YET
+First we are going to create/change the nagios.service
+$ nano /etc/systemd/system/nagios.service
+Paste the following code of the file 
+---------------------------------------------------------------
+[Unit]
+Description=Nagios
+BindTo=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+User=nagios
+Group=nagios
+Type=simple
+ExecStart=/usr/local/nagios/bin/nagios /usr/local/nagios/etc/nagios.cfg
+------------------------------------------------------------------
+We need to enable created nagios.service config
+$ systemctl enable /etc/systemd/system/nagios.service
+$ service nagios start
+---------------------------------------------------------------------------
+To check the service is working 
+$ service nagios status
+---------------------------------------------------------------------------
+Don't forget to install htop to monitor your memory 
+$ apt install htop

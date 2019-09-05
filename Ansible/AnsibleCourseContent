@@ -1,0 +1,110 @@
+----------Ansible---------------
+Ansible Basics
+Ansible vs. Other Tools
+Very brief history and reason for development of Ansible
+Brief comparison with Saltstack and others
+Benefits and limitations of using Ansible
+Introduction to YAML
+YAML Examples
+
+2.The Essentials Of Configuration And Deployment
+	What we can do with Ansible
+	Our goals before, and our goals now
+
+3. Setting Up
+		Configuration
+		Inventory
+
+		Playbooks:
+
+		Ansible Playbooks
+		Configuring Your 'Ansible' Account
+		Ansible Command Line
+		System Facts
+		System Facts: Common Values for Playbooks
+		Our First Playbook
+4. Quick Examples
+		Deploying configuration of Apache server
+		Managing changes in the configuration
+
+5. Outlining Your Playbook
+	Create a Playbook from Our Outline
+	Optimizing Your Playbook
+	Taking Our Playbook for a Dry Run
+	Asychronous Polling
+	Simple Variable Substitution
+	Lookups
+	RunOnce
+	Local Actions
+	Inclusion
+	Filters
+	Loops
+	Accelerated Mode
+	Asynchronous Actions
+	Pooling
+	Dry Run
+	Delegation, Rolling Updates and Local Actions
+	Promths
+	Tags
+	Vault
+	Running playbooks interactively
+	Until
+	Notify
+	Vault
+	Prompt - Interactive Playbook
+	Basic Include Statements
+	Tags
+	Basic Error Handling
+	Includes - Breaking Your Playbook Into Discrete Plays
+	Starting At Task or Stepping Through All Tasks
+	Passing Variables Into Playbooks at the Command Line
+	Using Jinja2 Templates
+	LocalAction
+	DelegateTo
+
+6. Dealing With Modules
+		Installing Modules
+		Overview of commonly used modules
+		Ansible Documentation: Modules
+		Setup and Configuration
+		Test Environment Setup
+		Download and Installation
+		Ansible Configuration File
+		Ansible Python Dependencies
+7.  Other
+	Ansible Tower
+	Ansible Galaxy
+	Testing Strategies
+	YAML Syntax
+8. The HOSTS File
+	Overriding the Default HOSTS File
+	Overriding the Default System Ansible.Cfg File
+	Overriding the Default Roles Path
+9. Roles
+	The Directory Structure
+	Role Based Tasks
+	Task Order - Pre and Post Tasks
+	Conditional Execution
+	Variable Substitution
+	Handlers
+	Using Notification
+	Configuring Alternate Roles Paths
+	Conditional Include Statements
+	Waiting For Events
+	Executing a Task Until
+	Using Tags
+	Breaking a Playbook Into a Role
+	Passing Variables from Command Line
+	Using Jinja2 Templates
+	DelegateTo
+	LocalAction
+10.Variables: Inclusion Types
+	Target Section
+	Variable Section
+	Task Section
+	Handler Section
+11. Ansible – Tower
+	Prerequisites To Install Ansible – Tower
+	Ansible – Tower Parameters
+	Installation Steps
+	Hands-On

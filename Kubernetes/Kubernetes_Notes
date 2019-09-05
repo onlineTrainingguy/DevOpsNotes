@@ -1,0 +1,117 @@
+Kubernetes is the open source container orchestation 
+It is developed by Google and published in July 2015
+It is ninth most active repoistory on GitHub in terms of number of commits
+
+Features of Kubernetes
+Pods
+Replication controller
+Storage management
+Resource Monitoring
+Health Checks
+Service Discovery
+Networking 
+Secret Managment
+Rolling Updates
+
+Docker Swarm Vs Kubernetes
+
+Docker Swarm                       Kubernetes
+Easy to install					Complex procedure to install
+Faster than Kubernetes      	Slower than docker Swarm
+Not Reliable and less fetures   Comparatively has more fetures
+
+Kubernetes Architecture
+
+                              Master
+							  |
+							  |
+			|-------------------------------------------|
+			Slave Node         Slave Node		        Slave Node
+
+Master Node Components
+
+etcd:->It is highly available distributed key value store, which is used to store cluster wide secrets, 
+       It is only accessible by Kubernetes API servers, as it has sensitive information
+API Server:->It exposes the Kubernetes API. The Kubernetes API is the front End for the Kubernetes control panel and used to deploy and execute
+             all operations in Kubernetes.
+Scheduler:-> Takes care of scheduling of all the processes, Dynamic resource Management and manages present and future events of cluster
+Controller Manager	:-		 
+			
+
+Kubernetes Installation
+Kubeadm-Bare Metal
+MiniKube:-Virtualized Enviorenment
+Kops:-Kubernetes on AWS
+GCP:-Google cloud Platform
+
+kubectl get pods --all-namespaces
+kubectl get nodes
+
+Deployment in the Kubernetes is a controller which helps your application to reach to the desired state, the desired state is defined in the deployment file
+
+Deployment file is a yaml file
+
+kubectl apply -f nginx.yaml
+kubectl get deployments
+kubectl get pods --show-labels
+kubectl get po
+kubectl get po -o wide
+
+
+Pods:-conatins one or more containers coupled together.These are the basic unit of Kubernetes. To increase the high availbility we perfer pods in replicas
+Services:-used to load balance the traffic among the pods. It follows round robin distribution among the healthy pods
+Ingress:-is an object that allows access to the kubernetes services from outside the kubernetes cluster.You configure access by creating a collection
+          of rules that define which inbound connection reach which service
+Deployment:-is controller which helps your applications to reach the desired state, the desired state is defined inside the deployment file.
+
+Service Types
+Cluster IP :- Exposes the service on cluster-internal IP ( only on pod network)
+Node Port:- Exposes the service on each Node's IP at static port
+Load Balancer:-Exposes the service externally using cloud provider's Load Balancer
+External name:-Maps the service to the contents of the external name
+
+#Create clusterip service
+kubectl create service clusterip nginx --tcp=80:80
+
+#list of services
+kubectl get svc
+curl <service ip> 10.101.192.142
+ kubectl delete service
+ 
+
+ kubectl create service nodeport nginx --tcp=80:80
+
+----------Ingress Controller
+https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/index.md
+Follow the steps
+check namespaces
+kubectl get pods --all-namespaces
+kubectl get svc
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /nginx
+          backend:
+            serviceName: nginx
+            servicePort: 80
+
+#kubectl create service clusterip nginx --tcp=80:80
+ kubectl apply -f demo.yaml		  
+  kubectl get ing
+  kubectl delete ing <<name>>
+  
+  ---------Dash Board
+  
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl proxy
+kubectl edit svc kubernetes-dashboard –n kube-system
+kubectl get svc kubernetes-dashboard –n kube-system
+TOKEN=$(kubectl describe secret $(kubectl -n kube-system get secret | awk '/^cluster-admin-dashboardsa-token-/{print $1}') | awk '$1=="token:"{print $2}') 

@@ -1,0 +1,189 @@
+Docker:-Container
+
+apt-get update
+apt-get install docker.io
+ docker --version
+docker hub--->docker engine-->Docker images---> run,stop,deleted
+
+ docker pull ubuntu
+ docker images    //list all the images downloaded on your system
+  docker run -it -d ubuntu   //it interactive d demon  when images are running it is called containers
+  docker ps   // list running images
+  docker stop <<df86a3b83361>>   container id
+  docker ps -a    //list all the continers 
+ docker kill <<container id>>  to stop or kill forcefully
+ docker rm <<container id>> to remove the container
+  docker exec -it d9a77afafa3b bash
+  
+  docker  rmi 47b19964fb50   //remove the images
+
+  
+Now run the commands in container which is independent of the commands of host OS
+exit      //to exit from container
+
+
+Create a Docker Hub account (https://hub.docker.com)
+
+create a user defined images
+docker commit <<container id>> <<new image name>>   // example we have created test image
+docker images
+run docker new image and check the changes should be available into that
+
+To remove all the docker containers 
+docker rm -f  $( docker ps -a -q)
+
+install apache2 to the container
+apt-get install apache2
+service apache2 status
+service apache2 start
+exit
+docker commit 99f528fc4261 ramansharma95/apache
+
+ docker run -it -p 82:80 -d ramansharma95/apache
+ docker exec -it <<container id>>
+ service apache start
+ open the web page it shold open the apache2 webpage
+ 
+ push image to docker hub
+ docker login
+ docker push ramansharma95/apache
+ check in the docker hub
+ 
+ 
+ --------Docker file
+ 
+ FROM :- is define th base image on which we are building  eg FROM ubuntu
+ ADD :- is used to add the files to the container being built, ADD <source> <destination in the container>
+        ADD . /var/www/html
+ RUN:-  is used to add layers to the base image, by installing components.Each RUN statement add a new layer to the docker image
+        RUN apt-get update
+        RUN apt-get -y install apache2
+ CMD :-is used to run the command on start of the container.These commands run when there is no argument specified while running the container
+        CMD apachectl -D FOREGROUND
+ ENTRYPOINT :-is used to strictly run the commands the moment the container intializes. The differnece between CMD and ENTRYPOINT is, ENTRYPOINT runs 
+            irrespective of the fact that whether argument is specified or not
+			ENTRYPOINT apachectl -D FOREGROUND
+ ENV :- is used to define the environment in container
+        ENV name Devops 
+Create a docker file Dockerfile
+
+FROM ubuntu
+RUN apt-get update
+RUN apt-get -y install apache2
+ADD . /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+ENV name DEVOPS raman
+
+Create an html file in the current directory.(index.html)
+Build the docker file
+docker build . -t new_dockerfile
+check the docker images 
+run the new docker image docker run -it -p84:80 -d new_dockerfile
+docker ps
+
+Docker Storage
+-------------------
+Data will removed if container is deleted so docker storage is used to keep the data even if container is deleted
+Types of Docker
+Docker Volume :- is a mountable entity which can be used to store data, in the docker file system
+                docker volume  create my-vol
+				it is software not the hardware component it can be attached and deattached
+				docker volume create demo-vol
+				docker volume ls     //to list the volumes
+				
+     			 docker run -it --mount source=demo-vol,destination=/app -d ubuntu
+				 remove the container
+				 attach volume to another container
+Bind Mounts :- mounts a directory from host machine to the container
+             To mount the directory which on the host machine to container
+			 docker run -it -v /home/ubuntu/mount:/demo -d ubuntu
+
+Linking docker Containers
+run container with name
+docker run -it --name container1 -d ubuntu
+docker run -it  --name container3 --link container1 -d ubuntu
+			 
+Monolithic Application
+is a single-tiered software application in which different components are combined into single program which resides in a single platform.
+like a single applicaiton contains Notification,Payments,Customer Service etc
+Microservices:- lossely coupled applications
+
+Compose file
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ docker-compose --version
+ 
+ 
+ YAML
+ it is superset of Json file. There are 2 types of component you need to learn 
+ Map:-key value pair <key>:<value>   eg Name:Devops
+ List:-Sequences of objects
+ args
+  -sleep
+  -"1000"
+  
+  To run the compose file
+ docker-compose up -d
+
+Container Orchestration
+  Applications are typically made up of indviually containerized components( microservices) that must be orgainsed on networking level in order
+  of application to run intended.The process of organising multiple containers in this manner is called container Orchestration
+ 
+ Docker Swarm
+ clustering and scheduling tool for docker containers. With Swarm, IT administrators and developers can establish and manage a cluster of Docker
+ nodes as single virtual machine.
+ 
+ Creating Docker Swarm Cluster
+ 
+ Docker swarm is installed along with docker
+ 
+ master node
+docker swarm init --advertise-addr=13.234.113.221
+
+on slave machine
+ docker swarm join --token SWMTKN-1-5puumvk4v75hoyohiu6q9x0xoqneybjzeew851iohy0eq5i8v9-1ee7cfdu6udpjqvz8sxtlncpf 13.234.113.221:2377
+
+on master
+docker node ls       # to view all the joined nodes
+
+
+Service in Docker Swarm
+it is an additional layer with networking part of container
+Containers on cluster are deployed using Services on docker swarm. A service is long running docker container that can be deployed to any node worker
+
+docker service create --name nginx --replicas 3 -p 80:80 nginx
+
+docker service ls
+
+check the running containers with docker ps command.
+docker service
+
+Docker Network
+bridge(default) :- When the application is running in the standalone container that need to communicate
+host :- For standalone containers, remove network isolation between container and docker host and use host networking directly (not port forwrading)
+overlay:-connect multiple docker demons and enable swarm service to communicate with each other
+MacVlan:-allow you to assign a MAC network address to a container to appear as a physical machine.
+none:-disable networking
+
+List network
+docker network ls
+Create the network
+1. docker network create -d overlay my-overlay
+# docker service create  --name website --replicas 3 –-network my-overlay --publish 80:80 hshar/webapp
+ docker service create --name website --replicas 3 --network my-overlay --publish 84:80 hshar/webapp
+
+ docker service ls
+ create db service
+  docker service create  --name db --replicas 1 --network my-overlay hshar/mysql:5.6 
+go inside db
+mysql -u root -p
+intelli
+
+Create database docker; 
+Use docker; 
+
+
+
+
+
+   
