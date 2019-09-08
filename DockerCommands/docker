@@ -182,6 +182,22 @@ intelli
 Create database docker; 
 Use docker; 
 
+mysql> create table emp(name varchar(30), phone varchar(30))
+    -> ;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from emp;
+Empty set (0.00 sec)
+
+mysql> select * from emp;
++------+---------+
+| name | phone   |
++------+---------+
+| xyz  | 5555555 |
++------+---------+
+1 row in set (0.00 sec)
+
+
 
 
 
