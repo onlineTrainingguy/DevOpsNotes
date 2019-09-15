@@ -1,0 +1,78 @@
+--Ansible Roles
+Roles in Ansible are next level of abstraction of Ansible playbooks
+--Benefits of Ansible Roles
+  idea of include files and combine them to form clean and resuable abstraction
+  Easy to maintain/troubleshooting the playbooks
+  
+--Structure of Roles
+  
+	files: contains the regular files those need to copy to target folder
+	handlers: Event handlers
+	meta: Role dependencies
+	templates: similar to files but contains dynamic data
+	tasks: playbook tasks
+	vars/group_vars: variable definitions
+	
+ansible-galaxy search apache
+galaxy.ansible.combine
+
+ansible-galaxy init apache --offline
+
+main.yml
+---
+# tasks file for apache
+- include: install.yml
+- include: configure.yml
+- include: service.yml
+
+#install.yml
+
+---
+ name: installing httpd
+ yum:
+  name: httpd
+  state: present
+
+#configure.yml
+---
+- name: httpd conf
+  copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+  notify:
+     restart apache service
+- name: send the file
+  copy: src=index.html dest=/var/www/html/index.html
+	
+
+# copy the configuration file to files/ folder
+cp /etc/httpd/conf/httpd.conf .
+
+# under handlers folder/main.yml
+
+---
+# handlers file for apache
+- name: restart apache service
+  service: name=httpd state=restarted
+  
+
+# Creating a template
+-----------------------
+---
+ - name: Running simple template
+   hosts: all
+   vars:
+    env: staginig
+    my_app_version: v1.1
+   tasks:
+    - name: calling templae on to remote host
+      template:
+        src: "{{ item }}.j2"
+        dest: "/etc/{{ item }}"
+        owner: root
+        group: root
+        mode: 0777
+      loop:
+       - my_app.conf
+       - my_app-release
+  
+
+	
