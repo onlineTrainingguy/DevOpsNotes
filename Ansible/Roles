@@ -54,25 +54,3 @@ cp /etc/httpd/conf/httpd.conf .
   service: name=httpd state=restarted
   
 
-# Creating a template
------------------------
----
- - name: Running simple template
-   hosts: all
-   vars:
-    env: staginig
-    my_app_version: v1.1
-   tasks:
-    - name: calling templae on to remote host
-      template:
-        src: "{{ item }}.j2"
-        dest: "/etc/{{ item }}"
-        owner: root
-        group: root
-        mode: 0777
-      loop:
-       - my_app.conf
-       - my_app-release
-  
-
-	
