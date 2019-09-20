@@ -89,7 +89,7 @@ $ sudo apt-get install puppet-master
 $ sudo systemctl status puppet-master.service
 
 Add the following lines in the puppet-master configuration file
-Next open port 8140 on the Puppet Master’s firewall
+Next open port 8140 on the Puppet Masterâ€™s firewall
 $ sudo nano /etc/default/puppet-master
 JAVA_ARGS="-Xms512m Xmx512m" 
 $ sudo systemctl restart puppet-master
@@ -111,7 +111,7 @@ $ sudo systemctl enable puppet
 
 
 Step 3: Make changes to the hosts file which exists in /etc/hosts. And add the Puppet
-Master IP address along with the name “puppet”
+Master IP address along with the name â€œpuppetâ€
 
 $ sudo nano /etc/hosts
 
@@ -155,3 +155,16 @@ mode => '0644',
 
 Goto client machine and run the command
 puppet agent --test
+
+-----------Find the resource types
+puppet resource --types
+puppet resource file /tmp/1.txt
+
+----To set the running interval on client machine
+By default the running interval on the client is 30 mins. but we can change it by changing /etc/puppet/puppet.conf
+[agent]
+server=puppet
+runinterval=1m
+
+Modules:-
+it is the collection of manifest with data( such as facts files and templates) and they have a specific directory structure. Modules are useful to organize puppet code because they allow you to split the code in multiple manifests.It is considered to be best practice to use modules to organize manifests.
