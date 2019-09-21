@@ -201,5 +201,21 @@ By default the running interval on the client is 30 mins. but we can change it b
 server=puppet
 runinterval=1m
 
+Classes
+
+in site.pp
+#---Create testuser
+class addusers
+{
+  user { 'testuser':
+        ensure=>present
+       }
+}
+node default {
+class { addusers:}
+}
+--------------
+
+
 Modules:-
 it is the collection of manifest with data( such as facts files and templates) and they have a specific directory structure. Modules are useful to organize puppet code because they allow you to split the code in multiple manifests.It is considered to be best practice to use modules to organize manifests.
