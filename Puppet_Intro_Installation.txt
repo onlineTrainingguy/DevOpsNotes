@@ -27,6 +27,41 @@ Syntax:
          argument => value,
          otherarg => value
       }
+
+node default {
+$mypackages = [ 'apache2', 'sudo', 'screen' ]
+
+package { $mypackages: ensure => 'installed' }
+}
+
+node default {
+
+# creating the directory called test
+file{ '/tmp/test':
+     ensure => 'directory'
+}
+
+}
+
+
+node default {
+
+# creating the directory called test
+file{ '/tmp/test1':
+     ensure => 'directory',
+     owner => 'root',
+     group => 'root',
+     mode => '0777',
+}
+
+}
+
+node default {
+
+# remove the given file
+tidy { '/tmp/3.txt': }
+}
+
 eg:
 Ex1  Verify nginx is installed
  
