@@ -215,7 +215,41 @@ node default {
 class { addusers:}
 }
 --------------
+Facts
+node default
 
+{
+$message=$facts['os']['family'] ? {
+'RedHat'=> 'running redhat',
+default=> 'running somewhere',
+}
+notify { $message: }
+}
+
+------
+mkdir -p /etc/facter/facts.d
+ cd /etc/facter/facts.d/
+ create file customfact.txt and add content
+customfact="hello world"
+
+Now run following command
+---------
+Templates
+#Create file test.epp
+
+<% | String $text, Boolean $bool | -%>
+Text value <%= $text %>
+
+<% if $bool { -%>
+Bool has true value
+<% } -%>
+
+To validate the syntax
+puppet epp validate test.epp
+To run the template
+puppet epp render test.epp --values '{ text => "Hello world", bool => true }'
+
+facter customfact
 
 Modules:-
 it is the collection of manifest with data( such as facts files and templates) and they have a specific directory structure. Modules are useful to organize puppet code because they allow you to split the code in multiple manifests.It is considered to be best practice to use modules to organize manifests.
