@@ -1,0 +1,83 @@
+-----------------SALT STACK---------
+it is a configuration management tools
+Python based, open source remote execution tool
+remote execution means run commands on various machines in parallel with flexible targeting system
+
+It estalishes the client server model quickly,easily and securely with in a given policy
+
+--------SALT STACK Components-----------
+
+Master
+Minion --Client (OS (Redhat,Ubuntu)
+Grains--Static information about minion (OS,memory,serial number etc)
+Execution Modules--Adhoc commands executed from the command line to one or more target minions
+
+-----Comparison
+Scalability- Puppet,SaltStack,Ansible,Chef these are highly scaleable
+Easeof setup--Puppet,SaltStack,Chef(Master and Agent Component) but in ansible it is on Master-Node
+Availbility:- Puppet( it has multi master archietcure)
+              SaltStack( it has multimaster)
+              Ansible- it runs with a single active node called Primary instance, if primary instance is down then there
+                       is Secondary instance to take its place
+              Chef:- Primary and Backup Server 
+Management:-  Puppet:- Puppet DSL
+              SaltStack- Easy to learn 
+              Ansible- Yaml syntax to learn Ansible
+              Chef:- Little diffcult as compare to other CMS
+InterOperatability:-
+            Puppet:-Linux,Windows
+            SaltStack:- Master will run on the Linux but client can be windows/Linux
+            Ansible:- Supports windows but Ansible server has to be linux
+            Chef:- Primary server will be Linux and Client can be windows.
+Configuration Language:-
+       Puppet:- DSL
+       SaltStack:- YAML
+       Ansile:- YAML
+       Chef:- DSL(Ruby)
+
+
+Highest Score is given to Ansible
+Install Salt Stack 
+
+Master:-
+
+apt install python-pip
+pip install salt
+To Verify 
+ 
+salt --version
+
+Minion:-
+
+apt install python-pip
+pip install salt
+
+salt --version
+
+write following code in /etc/salt/minion file
+master: <<IP>>
+id: min1
+
+
+-----On Master machine
+To run master component
+salt-master -d 
+salt-master -l debug
+Create a new window to run salt stack adhoc commands
+salt-key -L   # this is will show the id of minion under unaccepted key
+salt-key -a min1 # to accept the key
+
+salt 'min*' test.ping
+salt 'min*' cmd.run 'pwd'
+salt 'min*' file.touch '/tmp/1.txt'
+salt 'min*' file.write '/tmp/1.txt' 'salt stack'
+salt 'min1' grains.items
+
+
+
+
+---On Minion
+salt-minion -l debug
+
+
+
