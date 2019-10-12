@@ -1,0 +1,74 @@
+
+*******************************************************************
+*
+* Demo: HostPath  |  Raman Sharma
+*
+*
+*******************************************************************
+
+# 1. HostPath YAML file
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-hostpath
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+      volumeMounts:
+      - mountPath: /test-mnt
+        name: test-vol
+  volumes:
+  - name: test-vol
+    hostPath:
+      path: /test-vol
+
+
+*******************************************************************
+# 2. Create and Display HostPath
+
+kubectl create -f nginx-hostpath.yaml
+kubectl get po
+kubectl exec nginx-hostpath df /test-mnt
+
+*******************************************************************
+3. Test: Creating "test" file underlying host dir & accessing from from pod
+
+From HOST:
+~~~~~~~~~~
+cd /test-vol
+echo "From Host" > from-host.txt
+cat from-host.txt
+
+From POD:
+~~~~~~~~
+kubectl exec nginx-hostpath cat /test-mnt/from-host.txt
+
+
+*******************************************************************
+4. Test: Creating "test" file inside the POD & accessing from underlying host dir
+
+From POD:
+~~~~~~~~~
+kubectl exec nginx-hostpath -it -- /bin/sh
+cd /test-mnt
+echo "From Pod" > from-pod.txt
+cat from-pod.txt
+
+From Host:
+~~~~~~~~~~
+cd /test-vol
+ls
+cat from-pod.txt
+
+
+*******************************************************************
+5. Clean up
+
+kubectl delete po nginx-hostpath
+kubectl get po
+ls /test-vol
+
+
+******************************************************************* 

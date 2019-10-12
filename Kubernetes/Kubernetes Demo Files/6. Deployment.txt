@@ -1,0 +1,87 @@
+
+*******************************************************************
+.
+. Demo: Deployment  |  Raman Sharma
+.
+
+*******************************************************************
+
+# 1. Deployment YAML file
+
+# nginx-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx-app
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+  selector:
+    matchLabels:
+      app: nginx-app
+
+*******************************************************************
+# 2. Create and Display Deployment
+
+kubectl create -f nginx-deploy.yaml 
+kubectl get deploy -l app=nginx-app
+kubectl get rs -l app=nginx-app
+kubectl get po -l app=nginx-app
+kubectl describe deploy nginx-deploy
+
+*******************************************************************
+# 3. Testing: Rollback update 
+
+kubectl set image deploy nginx-deploy nginx-container=nginx:1.91 --record
+kubectl rollout status deployment/nginx-deploy
+kubectl rollout history deployment/nginx-deploy
+kubectl rollout undo deployment/nginx-deploy
+kubectl rollout status deployment/nginx-deploy
+kubectl describe deploy nginx-deploy | grep -i image
+
+*******************************************************************
+# 4. Testing: Update Version of "nginx:1.7.9"  to "nginx:1.9.1"
+
+kubectl set image deploy nginx-deploy nginx-container=nginx:1.9.1
+kubectl edit deploy nginx-deploy
+kubectl rollout status deployment/nginx-deploy
+kubectl get deploy
+
+*******************************************************************
+# 5. Testing: Scale UP
+
+kubectl scale deployment nginx-deploy --replicas=5
+kubectl get deploy
+kubectl get po -o wide
+
+*******************************************************************
+# 6. Testing: Scale DOWN
+
+kubectl scale deployment nginx-deploy --replicas=3
+kubectl get deploy
+kubectl get po -o wide
+   
+*******************************************************************
+
+# 7. Cleanup
+
+kubectl delete -f nginx-deploy.yaml
+kubectl get deploy
+kubectl get rs
+kubectl get po 
+
+*******************************************************************
+
+
+ 
