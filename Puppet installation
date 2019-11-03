@@ -1,0 +1,115 @@
+PUPPET INSTALLATION
+
+PUPPET INSTALLATION ON UBUNTU
+
+Installing Puppet Master
+Step 1: Run the following commands for installing Puppet Master
+$ sudo apt-get update
+$ sudo apt-get install wget
+$ wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+$ sudo dpkg -i puppet-release-bionic.deb
+$ sudo apt-get update
+
+$ sudo apt-get install puppet-master
+$ sudo systemctl status puppet-master.service
+
+Add the following lines in the puppet-master configuration file
+Next open port 8140 on the Puppet Master’s firewall
+$ sudo nano /etc/default/puppet-master
+JAVA_ARGS="-Xms512m Xmx512m" 
+$ sudo systemctl restart puppet-master
+$ sudo ufw allow 8140/tcp
+
+Installing Puppet Agent
+
+Step 2: Run the following commands for installing Puppet Agent
+
+$ sudo apt-get update
+$ sudo apt-get install wget
+$ wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+$ sudo dpkg -i puppet-release-bionic.deb
+$ sudo apt-get install puppet
+$ sudo nano /etc/hosts
+   add ip address of the master
+$ sudo systemctl start puppet
+$ sudo systemctl enable puppet
+
+
+Step 3: Make changes to the hosts file which exists in /etc/hosts. And add the Puppet
+Master IP address along with the name “puppet”
+
+$ sudo nano /etc/hosts
+
+Step 4: Create the following directory path:
+
+$ sudo mkdir -p /etc/puppet/code/environments/production/manifests
+
+
+Configuring Puppet Slave
+
+Step 1: Add the entry for Puppet Master in /etc/hosts
+
+Step 2: Finally start the Puppet agent by using the following command. Also, enable the
+service, so that it starts when the computer starts
+
+$ sudo systemctl start puppet
+$ sudo systemctl enable puppet
+
+
+On Master
+
+$ sudo puppet cert list
+
+Step 2: Finally, sign the listed certificate using the following command:
+$ sudo puppet cert sign --all
+
+On master machine create /etc/puppet/code/environments/production/manifests/site.pp
+
+node default{
+
+package {'nginx':
+ensure => installed,
+}
+
+file { '/tmp/status.txt':
+
+content => 'installed',
+mode => '0644',
+}
+}
+
+Goto client machine and run the command
+puppet agent --test
+
+
+---Variable
+
+node default{
+
+package {'nginx':
+ensure => installed,
+}
+
+$test = "ok"
+
+file { '/tmp/status.txt':
+
+content => $test,
+mode => '0644',
+}
+}
+
+
+---------------
+Loops
+-------------
+node default{
+
+$packages = ['apache2','mysql-server']
+
+package {$packages:
+ensure => installed,
+
+}
+}
+
