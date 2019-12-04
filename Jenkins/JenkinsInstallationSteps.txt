@@ -11,3 +11,10 @@ sudo apt install jenkins
 systemctl status jenkins
 
 sudo ufw allow 8080
+
+give sudo permisssion to jenkins user
+
+vi /etc/sudoers
+and add below entry
+jenkins ALL=(ALL) NOPASSWD: ALL
+and save the file
