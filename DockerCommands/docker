@@ -206,6 +206,21 @@ docker image inspect image_id
 delete all unused image
 docker image prune
 
+if add new slave with master
+docker swarm join-token worker
+
+join as a master
+docker swarm join-token manager
+
+left from swarm
+docker swarm leave
+
+make all slave master(docker swarm olny allow 1,3,5,7 master node)
+docker node promote slave1 slave2 
+
+make again slave
+docker node demote slave1 slave2
+
 
 
 
