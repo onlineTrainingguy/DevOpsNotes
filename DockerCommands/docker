@@ -1,4 +1,5 @@
 Docker:-Container
+test
 
 apt-get update
 apt-get install docker.io
@@ -196,6 +197,14 @@ mysql> select * from emp;
 | xyz  | 5555555 |
 +------+---------+
 1 row in set (0.00 sec)
+history of docker image
+docker image history image_name
+
+Detalis information of docker image
+docker image inspect image_id
+
+delete all unused image
+docker image prune
 
 
 
