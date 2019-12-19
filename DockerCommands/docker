@@ -221,8 +221,17 @@ docker node promote slave1 slave2
 make again slave
 docker node demote slave1 slave2
 
+docker swarm visulizer 
 
+attache the lable with worker node(this command run only master node)
+docker node update --label-add ='ssd=true' workernode01
 
+attache the replicas with label workdernpde01
+docker service create --constraint='node.labels.ssd==true' --replicas=3 -d alpine
+
+we can also configure engine level label(for engine leave need to configure the daemon.json file)
+ shift the container to other workers 
+ docker node update --availablity=drain workert01
 
 
 
