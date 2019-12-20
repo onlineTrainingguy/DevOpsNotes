@@ -233,6 +233,11 @@ we can also configure engine level label(for engine leave need to configure the 
  shift the container to other workers 
  docker node update --availablity=drain workert01
 
-
+docker stack deploy:- When running Docker Engine in swarm mode, you can use docker stack deploy to deploy a complete application stack to the swarm.
+The deploy command accepts a stack description in the form of a Compose file. The docker stack deploy command supports any Compose file of version “3.0” or above.
+stack file:-
+           From the Cloud stack file YAML reference, it states a stack file is a file in YAML format that defines one or more services, similar to a docker-compose.yml file but with a few extensions.
+ 
+ docker stack deploy -c docker-compose.yml wordpresstack 
 
    
