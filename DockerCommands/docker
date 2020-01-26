@@ -3,6 +3,9 @@ Docker:-Container
 apt-get update
 apt-get install docker.io
  docker --version
+docker version
+docker info
+docker   
 docker hub--->docker engine-->Docker images---> run,stop,deleted
 
  docker pull ubuntu
@@ -49,6 +52,14 @@ docker commit 99f528fc4261 ramansharma95/apache
  docker push ramansharma95/apache
  check in the docker hub
  
+ -----------Create Local Docker registry
+ 
+ docker container run -d -p 5000:5000 --name local_registry registry
+ http://<serverip>:5000/v2/_catalog
+ docker container inspect local_registry
+ docker image tag ubuntu localhost:5000/ubuntu:latest
+ docker image push localhost:5000/ubuntu
+ docker image pull localhost:5000/ubuntu
  
  --------Docker file
  
@@ -72,7 +83,7 @@ RUN apt-get update
 RUN apt-get -y install apache2
 ADD . /var/www/html
 ENTRYPOINT apachectl -D FOREGROUND
-ENV name DEVOPS raman
+ENV name DEVOPS 
 
 Create an html file in the current directory.(index.html)
 Build the docker file
