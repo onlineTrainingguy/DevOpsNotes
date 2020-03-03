@@ -240,4 +240,7 @@ stack file:-
  
  docker stack deploy -c docker-compose.yml wordpresstack 
 
+* docker restart command for start the again ccontainer
+- docker start container_id
+- docker container run -d --restart unless-stop imagename
    
