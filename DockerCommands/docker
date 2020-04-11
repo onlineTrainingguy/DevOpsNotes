@@ -52,6 +52,12 @@ docker commit 99f528fc4261 ramansharma95/apache
  docker push ramansharma95/apache
  check in the docker hub
  
+ ---docker save and load command
+ 
+   
+     docker save mywebserver > mywebserver.tar
+    docker load < mywebserver.tar
+   
  -----------Create Local Docker registry
  
  docker container run -d -p 5000:5000 --name local_registry registry
