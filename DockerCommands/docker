@@ -11,6 +11,10 @@ docker hub--->docker engine-->Docker images---> run,stop,deleted
  docker pull ubuntu
  docker images    //list all the images downloaded on your system
   docker run -it -d ubuntu   //it interactive d demon  when images are running it is called containers
+  sudo docker run -m 4m -dit --name web1 nginx   # running the container with a limit of 4mb
+  sudo docker run -c 614 -dit --name db postgres /postgres.sh
+   sudo docker run -c 410 -dit --name web nginx /nginx.sh
+#Will give 60% to the db container (614 is 60% of 1024) and 40% to the web containe
   docker ps   // list running images
   docker stop <<df86a3b83361>>   container id
   docker ps -a    //list all the continers 
