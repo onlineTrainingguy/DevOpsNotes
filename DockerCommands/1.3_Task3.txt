@@ -1,0 +1,7 @@
+Task:-3
+
+Create docker swarm services using docker stack to implement webapp (whizlabs/webapp )and db app (whizlabs/mysql) on docker swarm cluster.
+
+Solution:--
+ cp docker-compose.yml mystack.yml
+ docker stack deploy -c mystack.yml mystack

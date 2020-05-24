@@ -1,0 +1,23 @@
+---Task:-2
+ 
+Create a docker a service webapp which refers to whizlabs/webapp ( it is a custom php application) for the front-end and another service db( it is a mysql image) on which webapp depends called db  using docker compose file.
+
+---Solution
+create docker-compose.yml file with following code
+
+version: '3.3'
+
+services:
+   db:
+     image: whizlabs/mysql
+
+   webapp:
+     depends_on:
+       - db
+     image: whizlabs/webapp
+     ports:
+       - "80:80"
+
+Now run the docker compose with following command
+
+docker-compose up -d

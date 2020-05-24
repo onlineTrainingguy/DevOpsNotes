@@ -1,0 +1,8 @@
+---Task:-1
+
+Create two containers on bridge network which uses front-end application as a docker image "whizlabs/webapp" and another container which refers to "whizlabs/mysql" docker image. Modify the code of webapp such that it uses the mysql connectionstring/database/tables from other running container.
+
+---Solution
+
+docker run --name webapp -it -p 80:80 -d whizlabs/webapp
+docker run --name db -it -d whizlabs/mysql
