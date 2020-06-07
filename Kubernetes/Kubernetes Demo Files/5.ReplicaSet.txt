@@ -41,7 +41,7 @@ kubectl get po -o wide
 kubectl get po -l app=nginx-app
 kubectl get rs nginx-rs -o wide
 kubectl describe rs nginx-rs
-
+kubectl get po -l 'tier in (frontend)'
 *******************************************************************
 # 3. Automatic Pod Reschedule 
 
