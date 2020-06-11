@@ -49,4 +49,25 @@ kubectl get po
 
 
 *************************************************************************************************************************************************
+**************Cron Job***********************
+#cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+   name: cronjob
+spec:
+   schedule: "* * * * *"
+   successfulJobsHistoryLimit: 2
+   failedJobsHistoryLimit: 1
+   suspend: true
+   jobTemplate:
+     spec:
+       template:
+         spec:
+           containers:
+           - name: busybox
+             image: busybox
+             command: ["echo", "Hello world"]
+           restartPolicy: Never
 
+kubectl create -f cronjob.yaml
