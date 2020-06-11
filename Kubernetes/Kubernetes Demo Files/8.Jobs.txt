@@ -71,3 +71,11 @@ spec:
            restartPolicy: Never
 
 kubectl create -f cronjob.yaml
+
+kubectl patch cronjob cronjob -p '{"spec":{"suspend":false}}'
+
+concurrencyPolicy:   Allow,Forbid,Replace
+Allow to allow multiple jobs runs at a time
+Forbid to wait a running job to finish first and then execute another instance of the job
+Replace to replace an existing job.
+
