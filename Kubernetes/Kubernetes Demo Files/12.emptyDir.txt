@@ -1,6 +1,6 @@
 *******************************************************************
 .
-. Demo: emptyDir  |  Srinath Challa
+. Demo: emptyDir  |  Raman
 .
 *******************************************************************
 1. Pod with emptyDir Volume YAML (example)

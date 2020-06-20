@@ -1,0 +1,67 @@
+Service
+--1
+docker run -it alpine ping 172.31.15.233
+docker service --help
+ docker service create --name myservice -d  alpine ping 172.31.15.233
+docker service inspect <<service name>> | less
+docker service logs <<service name>>
+
+
+--2
+ docker service create --name myservice -d --replicas 4 alpine ping 172.31.15.233
+ docker service ps myservice
+ remove containers on one of the worker node and find the status of the service
+
+--3
+   docker service create \
+>   --name=viz \
+>   --publish=8080:8080/tcp \
+>   --constraint=node.role==manager \
+>   --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+>   dockersamples/visualizer
+
+--4
+   docker service scale myservice=2
+   docker service scale myservice=5
+   docker service rm myservice
+--5
+  docker service --name webservice create -d -p 80:80 nginx
+  now you can access it on any worker node
+--6
+  docker service create --name webservice -d --mode=global --publish=80:80 nginx
+  remove a woker node and check the visualizer
+  add it again you will find the one replica is created on the worker node
+--7 labels and constraint
+
+  docker service create --name webservice -d --constraint="node.role==manager" --publish=80:80 nginx
+  docker srevice scale webservice=2  
+  Check the visualizer
+  docker service create --name webservice -d  --constraint="node.role==worker"  --publish 80:80 nginx
+  
+  docker node update --label-add="webserver=true" worker01
+  docker service create --name webservice -d --constraint="node.labels.webserver==true" --publish 80:80 nginx
+  if we create same label to worker02 will the load shifted to worker 02 or not ans is not because you have to se the labels upfront
+  
+  now create the labels on engine level
+  
+  goto worker node2
+  vi /etc/docker/daemon.json
+  
+{
+   "labels": ["name=testserver"]
+}
+
+create service on label server
+docker service create --name webservice1 -d --constraint="engine.labels.name==testserver" --publish 84:80 nginx
+
+--8 node availbility
+docker node update --availability=pause worker02
+now the new containers will not be creating on worker02
+docker node update --availability=active worker02
+
+docker node update --availability=drain worker02  # now the nodes are moved to other worker nodes or manager nodes
+
+
+~
+
+  

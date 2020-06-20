@@ -49,4 +49,33 @@ kubectl get po
 
 
 *************************************************************************************************************************************************
+**************Cron Job***********************
+#cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+   name: cronjob
+spec:
+   schedule: "* * * * *"
+   successfulJobsHistoryLimit: 2
+   failedJobsHistoryLimit: 1
+   suspend: true
+   jobTemplate:
+     spec:
+       template:
+         spec:
+           containers:
+           - name: busybox
+             image: busybox
+             command: ["echo", "Hello world"]
+           restartPolicy: Never
+
+kubectl create -f cronjob.yaml
+
+kubectl patch cronjob cronjob -p '{"spec":{"suspend":false}}'
+
+concurrencyPolicy:   Allow,Forbid,Replace
+Allow to allow multiple jobs runs at a time
+Forbid to wait a running job to finish first and then execute another instance of the job
+Replace to replace an existing job.
 

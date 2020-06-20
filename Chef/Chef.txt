@@ -1,0 +1,56 @@
+--Install Chefdk
+curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -c stable -v 0.18.30
+--Check Chefdk version
+chef --version
+which chef
+
+------------------------First Receipe---------------
+Prog1: Create a Chef Reciepe which creates a file /hello.txt and add the content as Hello World
+
+Create a file hello.rb and write the following code
+
+ file '/hello.txt' do
+  content 'Hello World'
+end
+
+--Execute above code
+sudo chef-client --local-mode hello.rb
+
+--Result :-Check /hello.txt file and that should exist with content Hello World
+
+
+-----------------Resource Examples
+
+package 'httpd' do
+action :install
+end
+
+
+service 'httpd' do
+action [ :enable, :start ]
+end'
+
+--------Chef Cookbook Examples
+
+chef --help
+chef generate --help
+chef generate cookbook --help
+
+Let's create a dir called cookbooks
+
+---Create a cookbook called workstation
+chef generate cookbook cookbooks/workstation
+
+Create some reciepe in workstataion
+
+chef-client -z --runlist "workstation::setup"
+chef-client -z -r "recipe[workstation::setup]"
+
+----How to include a recipe in another recipe
+include_recipe 'workstation::setup'
+chef-client -z -r "recipe[workstation]"
+
+
+--------------Template Example
+chef generate template cookbooks/workstation/ motd
+

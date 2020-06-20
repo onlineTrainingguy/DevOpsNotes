@@ -1,7 +1,7 @@
 
 *******************************************************************
 *
-* Demo: Load Balancer Service  |  Srinath Challa
+* Demo: Load Balancer Service  |  Raman
 *
 *
 *******************************************************************
@@ -55,7 +55,7 @@ spec:
 *******************************************************************
 2. Create & Display: Deployment & Load Balancer Service
 
-kubectl create –f nginx-deploy.yaml
+kubectl create â€“f nginx-deploy.yaml
 kubectl create -f lb.yaml
 kubectl get pod -l app=nginx-app
 kubectl get deploy -l app=nginx-app 
@@ -95,7 +95,7 @@ http://nodeip:nodeport/test.html
 *******************************************************************
 4. Cleanup
 
-kubectl delete –f nginx-deploy.yaml
+kubectl delete â€“f nginx-deploy.yaml
 kubectl delete -f lb.yaml
 kubectl get pod 
 kubectl get deploy 

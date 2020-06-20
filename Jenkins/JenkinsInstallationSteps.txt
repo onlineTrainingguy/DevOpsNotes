@@ -1,0 +1,22 @@
+sudo apt update
+sudo apt install openjdk-8-jdk
+
+1  apt install openjdk-8-jdk -y
+ 
+    2  wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+    3  sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+    4  sudo add-apt-repository universe
+    5   sudo gpg --keyserver  http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key --recv-keys          https://pkg.jenkins.io/debian/jenkins.io.key
+    6  apt-get update
+    7  sudo apt-get install jenkins -y
+    
+systemctl status jenkins
+
+sudo ufw allow 8080
+
+give sudo permisssion to jenkins user
+
+vi /etc/sudoers
+and add below entry
+jenkins ALL=(ALL) NOPASSWD: ALL
+and save the file

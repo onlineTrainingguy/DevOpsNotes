@@ -1,0 +1,29 @@
+A Banking System has a website which is developed in JAVA Spring Boot and hosted on TomCat Server with below configuration
+
+1. Application Name :- Banking Mortage App 
+2. Front End        :- Java Spring Boot
+3. Back End         :- MySql
+4. Process used     :- Devops
+5. Devops Tools used:- Git/Github,Maven,Selenium,Docker,Kubernetes,Ansible,Jenkins,Nagios
+
+Project Description
+ 
+Application Overview 
+  Mortgage APP is used either by purchasers of real property to raise funds to buy real estate, or alternatively by existing property owners to raise funds for any purpose while putting a lien on the property being mortgaged. The loan is "secured" on the borrower's property through a process known as mortgage origination. 
+
+DevOps Automation Process
+ 
+ The DevOps process is used to maintain flow is all about agility and automation of the applicaiton life cycle. Each phase in the process  focuses on closing the loop between development and operations and driving production through continuous development, integration, testing, monitoring and feedback, delivery, and deployment. 
+
+Continuous development (Git and GitHub)
+   Git and Github is configured with Eclipse to each member of developement team so that they can maintiain the version control of source code and once the code is in the GitHub, then it is considered to be the latest copy of the code. GitHub repository is also used for creating different branches for different developers.
+
+Continuous Integration (Mave,docker,selenium,Jenkins,Ansible)
+  In this practice the Github applicaiton is webhooked with Jenkins and a CI pipeline is created which is in the form of Jenkins jobs, Application source code is automatically build with Maven and a docker container with the help of Dockerfile to configure test environment(install jdk8 and configure selenium script and ),as there are different testing environment like ubuntu,RedHat,Kali OS so these environments are configured with Ansible scripts so  and the applicaiton's publish code is copied to Test webserver (docker container).
+
+Continuous Deployment(Jenkins,Kubernetes)
+ Once the testing is completed successfully ( checked with some parameters) then container images get created and kept in docker registry. These images are configured and running on webservers and dbservers with a Replication and Deployment policy with the help of Kubernetes.
+
+Continuous Monitoring(Nagios)
+ All the host servers are configured and applications are monitored with Nagios Continous Montioring and Operation team is notified whenever there is any issue either in infrastrcuter or on applicaiton point of view.
+

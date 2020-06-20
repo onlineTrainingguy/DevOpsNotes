@@ -3,11 +3,18 @@ Docker:-Container
 apt-get update
 apt-get install docker.io
  docker --version
+docker version
+docker info
+docker   
 docker hub--->docker engine-->Docker images---> run,stop,deleted
 
  docker pull ubuntu
  docker images    //list all the images downloaded on your system
   docker run -it -d ubuntu   //it interactive d demon  when images are running it is called containers
+  sudo docker run -m 4m -dit --name web1 nginx   # running the container with a limit of 4mb
+  sudo docker run -c 614 -dit --name db postgres /postgres.sh
+   sudo docker run -c 410 -dit --name web nginx /nginx.sh
+#Will give 60% to the db container (614 is 60% of 1024) and 40% to the web containe
   docker ps   // list running images
   docker stop <<df86a3b83361>>   container id
   docker ps -a    //list all the continers 
@@ -49,6 +56,20 @@ docker commit 99f528fc4261 ramansharma95/apache
  docker push ramansharma95/apache
  check in the docker hub
  
+ ---docker save and load command
+ 
+   
+     docker save mywebserver > mywebserver.tar
+    docker load < mywebserver.tar
+   
+ -----------Create Local Docker registry
+ 
+ docker container run -d -p 5000:5000 --name local_registry registry
+ http://<serverip>:5000/v2/_catalog
+ docker container inspect local_registry
+ docker image tag ubuntu localhost:5000/ubuntu:latest
+ docker image push localhost:5000/ubuntu
+ docker image pull localhost:5000/ubuntu
  
  --------Docker file
  
@@ -68,11 +89,12 @@ docker commit 99f528fc4261 ramansharma95/apache
 Create a docker file Dockerfile
 
 FROM ubuntu
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get -y install apache2
 ADD . /var/www/html
 ENTRYPOINT apachectl -D FOREGROUND
-ENV name DEVOPS raman
+ENV name DEVOPS 
 
 Create an html file in the current directory.(index.html)
 Build the docker file
@@ -197,7 +219,69 @@ mysql> select * from emp;
 +------+---------+
 1 row in set (0.00 sec)
 
+----------------------
+Stack and Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ docker-compose --version
 
+#docker-compose.yml
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+       WORDPRESS_DB_NAME: wordpress
+volumes:
+    db_data: {}
+
+
+docker-compose up -d
+docker container ls
+docker-compose scale db=3
+docker container ls
+docker-compose down
+docker container ls
+cp docker-compose.yml stack.yml
+docker stack --help
+docker stack deploy -c stack.yml mystack
+docker stack ls
+docker stack services mystack
+docker service ps mystack_db
+docker service ps mystack_wordpress
+docker network ls
+docker stack ls
+docker stack rm mystack
+
+---------------------service update
+
+docker service create --name redis --replicas 5 --update-delay 10s redis:3.0.6
+docker service ls
+docker service ps redis
+docker service update redis --image redis:3.0.7
+docker service update redis --image redis:21
+docker service ls
+docker service rollback redis
 
 
 
