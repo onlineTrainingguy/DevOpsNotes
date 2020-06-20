@@ -1,0 +1,8 @@
+systemctl stop docker
+tar -zcvf swarm.tar.gz swarm/
+systemctl start docker
+ docker node ls
+ systemctl stop docker
+rm -fr swarm
+tar -xvzf swarm.tar.gz
+systemctl start docker
