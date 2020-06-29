@@ -126,6 +126,36 @@ USER raman
 sudo docker build -t nonrootimage . # create custom image
 docker exec -it test2 bash
 
+#Eample of COPY and ADD
+FROM centos:7.4.1708
+RUN mkdir /mydata
+COPY myfiles /mydata/myfiles
+ADD myfiles2 /mydata/myfile2
+ADD https://xxx/pip-18.1.tar.gz /mydata
+ADD pip-18.1.tar.gz /mydata/pipunpack
+
+# CMD and ENTRYPOINT
+FROM ubuntu
+CMD echo "Hello World"
+
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+docker run -it img1 echo "Hello India" # it will overwrite the CMD and Print Hello India
+
+FROM ubuntu
+ENTRYPOINT ["echo","Hello World"]
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+docker run -it img1 echo "Hello India" # it will not overwrite the ENTRYPOINT and Print Hello World echo Hello India
+
+FROM ubuntu
+ENTRYPOINT ["echo"]
+CMD ["Hello World"]
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+
+
+
 Create an html file in the current directory.(index.html)
 Build the docker file
 docker build . -t new_dockerfile
