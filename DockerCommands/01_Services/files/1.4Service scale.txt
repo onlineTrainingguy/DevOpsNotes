@@ -1,0 +1,3 @@
+docker service scale myservice=2
+   docker service scale myservice=5
+   docker service rm myservice

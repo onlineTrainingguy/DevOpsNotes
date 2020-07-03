@@ -1,0 +1,7 @@
+docker service create --name redis --replicas 5 --update-delay 10s redis:3.0.6
+docker service ls
+docker service ps redis
+docker service update redis --image redis:3.0.7
+docker service update redis --image redis:21
+docker service ls
+docker service rollback redis

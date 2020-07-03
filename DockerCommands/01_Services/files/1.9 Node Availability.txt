@@ -1,0 +1,5 @@
+docker node update --availability=pause worker02
+
+docker node update --availability=active worker02
+
+docker node update --availability=drain worker02  

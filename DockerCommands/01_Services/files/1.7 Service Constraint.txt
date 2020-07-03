@@ -1,0 +1,8 @@
+  docker service create --name webservice -d --constraint="node.role==manager" --publish=80:80 nginx
+  docker srevice scale webservice=2  
+  
+  Check the visualizer
+   
+  docker service create --name webservice -d  --constraint="node.role==worker"  --publish 80:80 nginx
+  
+  

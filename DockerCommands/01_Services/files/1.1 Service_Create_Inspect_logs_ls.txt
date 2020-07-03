@@ -1,0 +1,5 @@
+docker run -it alpine ping 172.31.15.233
+docker service --help
+ docker service create --name myservice -d  alpine ping 172.31.15.233
+docker service inspect <<service name>> | less
+docker service logs <<service name>>

@@ -1,0 +1,3 @@
+ docker service create --name myservice -d --replicas 4 alpine ping <<host IP>>
+ docker service ps myservice
+ remove containers on one of the worker node and find the status of the service
