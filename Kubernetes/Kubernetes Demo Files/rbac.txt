@@ -1,0 +1,67 @@
+kubectl create ns finance
+openssl genrsa -out john.key 2048  # it will create a private key
+openssl req -new -key john.key -out john.csr -subj "/CN=john/O=javadeveloper"
+
+openssl x509 -req -in john.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out john.crt -days 500
+
+#Create a role for namespace finance with resource permission 
+#role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: finance
+  name: deployment-manager
+rules:
+- apiGroups: ["","extensions","apps"]
+  #
+  # at the HTTP level, the name of the resource for accessing ConfigMap
+  # objects is "configmaps"
+  resources: ["deployments","replicasets","pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+kubectl create -f role.yaml
+
+
+#rolebinding.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows "jane" to read pods in the "default" namespace.
+# You need to already have a Role named "pod-reader" in that namespace.
+kind: RoleBinding
+metadata:
+  name: deployment-manager-binding
+  namespace: finance
+subjects:
+# You can specify more than one "subject"
+- kind: User
+  name: john
+  apiGroup: ""
+roleRef:
+  # "roleRef" specifies the binding to a Role / ClusterRole
+  kind: Role #this must be Role or ClusterRole
+  name: deployment-manager # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: ""
+
+kubectl create -f rolebinding.yaml
+
+kubectl config set-credentials john --client-certificate=/home/ubuntu/temp/john.crt --client-key=/home/ubuntu/temp/john.key
+
+kubectl config set-context developer-context --cluster=kubernetes --namespace=finace --user=john
+
+----Install client
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+
+ chmod +x ./kubectl
+
+ sudo mv ./kubectl /usr/local/bin/kubectl
+ kubectl version --client
+
+
+ ls ./kube
+ kubectl --kubeconfig config cluster-info
+ kubectl --kubeconfig config config view
+ kubectl --kubeconfig config config view -o jsonpath='{.contexts[*].name}'
+ 
+ kubectl --kubeconfig config get pods -n finance
+ kubectl --kubeconfig config run nginx-pod --image=nginx -n finance
+ kubectl --kubeconfig config get pods -n finance
