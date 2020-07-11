@@ -15,8 +15,8 @@ Overview:
 
 2. Creating Configmap from "literal values" & Consuming it inside Pod from "environment variables" 
 
-   2a. Create configmap ìredis-configmap-envî from "literal values"
-   2b. Consume ìredis-configmap-envî configmap inside pod from ìEnvironment Variablesî inside pod
+   2a. Create configmap ‚Äúredis-configmap-env‚Äù from "literal values"
+   2b. Consume ‚Äúredis-configmap-env‚Äù configmap inside pod from ‚ÄúEnvironment Variables‚Äù inside pod
    2c. Create | Display | Validate
 
 3. Cleanup
@@ -106,7 +106,7 @@ kubectl exec nginx-pod-configmap-vol cat /etc/non-sensitive-data/file-b.txt
 2. Creating Configmap from "literal values" & Consuming it inside Pod from "environment variables"  
 
 
-2a.  Create configmap ìredis-configmap-envî from "literal values"
+2a.  Create configmap ‚Äúredis-configmap-env‚Äù from "literal values"
 -----------------------------------------------------------------
 
 kubectl create configmap redis-configmap-env --from-literal=file.1=file.a --from-literal=file.2=file.b
@@ -116,7 +116,7 @@ kubectl describe configmap redis-configmap-env
 
 ===============================================================================
 
-2b. Consume ìredis-configmap-envî configmap inside pod from ìEnvironment Variablesî inside pod
+2b. Consume ‚Äúredis-configmap-env‚Äù configmap inside pod from ‚ÄúEnvironment Variables‚Äù inside pod
 -----------------------------------------------------------------------------------------------
 
 # redis-pod-configmap-env.yaml
@@ -164,6 +164,70 @@ exit
 # Validate from "outside" the pod
 kubectl exec redis-pod-configmap-env env | grep FILE
 
+*******************************************************************************************************************************************
+#cm.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-demo
+data:
+  # property-like keys; each key maps to a simple value
+  player_initial_lives: "3"
+  ui_properties_file_name: "user-interface.properties"
+  #
+  # file-like keys
+  game.properties: |
+    enemy.types=aliens,monsters
+    player.maximum-lives=5
+  user-interface.properties: |
+    color.good=purple
+    color.bad=yellow
+    allow.textmode=true
+
+kubectl create -f cm.yaml
+kubectl get cm
+
+# To consume the Config map create below pod
+#podcm.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-demo-pod
+spec:
+  containers:
+    - name: demo
+      image: nginx
+      env:
+        # Define the environment variable
+        - name: PLAYER_INITIAL_LIVES # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo           # The ConfigMap this value comes from.
+              key: player_initial_lives # The key to fetch.
+        - name: UI_PROPERTIES_FILE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: game-demo
+              key: ui_properties_file_name
+      volumeMounts:
+      - name: config
+        mountPath: "/config"
+        readOnly: true
+  volumes:
+    # You set volumes at the Pod level, then mount them into containers inside that Pod
+    - name: config
+      configMap:
+        # Provide the name of the ConfigMap you want to mount.
+        name: game-demo
+        # An array of keys from the ConfigMap to create as files
+        items:
+        - key: "game.properties"
+          path: "game.properties"
+        - key: "user-interface.properties"
+          path: "user-interface.properties"
+
+kubectl create -f podcm.yaml
 
 *************************************************************************************************************************************************
 

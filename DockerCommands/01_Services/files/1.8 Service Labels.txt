@@ -1,0 +1,12 @@
+docker node update --label-add="webserver=true" worker01
+  
+  docker service create --name webservice -d --constraint="node.labels.webserver==true" --publish 80:80 nginx
+  
+  vi /etc/docker/daemon.json
+  
+{
+   "labels": ["name=testserver"]
+}
+
+create service on label server
+docker service create --name webservice1 -d --constraint="engine.labels.name==testserver" --publish 84:80 nginx

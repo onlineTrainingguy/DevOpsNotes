@@ -1,7 +1,24 @@
 Docker:-Container
 
-apt-get update
-apt-get install docker.io
+Installation Steps on Ubuntu
+    1  apt update
+    2  apt install docker.io -y
+    3  docker --version
+    4  docker info
+    5  systemctl status docker
+
+Installation Steps on Centos 
+  1  yum update -y
+    2  yum install -y yum-utils
+    3  yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
+    4  yum install docker-ce docker-ce-cli containerd.io
+    5  systemctl status docker
+    6  systemctl start docker
+    7  systemctl status docker
+    8  docker --version
+    9  docker info
+   10  docker version
+
  docker --version
 docker version
 docker info
@@ -21,7 +38,9 @@ docker hub--->docker engine-->Docker images---> run,stop,deleted
  docker kill <<container id>>  to stop or kill forcefully
  docker rm <<container id>> to remove the container
   docker exec -it d9a77afafa3b bash
-  
+  docker run -it --name test ubuntu
+  create a user using adduser 
+   docker exec -it -u raman test bash
   docker  rmi 47b19964fb50   //remove the images
 
   
@@ -95,6 +114,47 @@ RUN apt-get -y install apache2
 ADD . /var/www/html
 ENTRYPOINT apachectl -D FOREGROUND
 ENV name DEVOPS 
+
+
+# Base image is CentOS 7
+FROM centos:7
+# Add a new user "john" with user id 8877
+RUN useradd -u 8877 raman
+# Change to non-root privilege
+USER raman
+
+sudo docker build -t nonrootimage . # create custom image
+docker exec -it test2 bash
+
+#Eample of COPY and ADD
+FROM centos:7.4.1708
+RUN mkdir /mydata
+COPY myfiles /mydata/myfiles
+ADD myfiles2 /mydata/myfile2
+ADD https://xxx/pip-18.1.tar.gz /mydata
+ADD pip-18.1.tar.gz /mydata/pipunpack
+
+# CMD and ENTRYPOINT
+FROM ubuntu
+CMD echo "Hello World"
+
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+docker run -it img1 echo "Hello India" # it will overwrite the CMD and Print Hello India
+
+FROM ubuntu
+ENTRYPOINT ["echo","Hello World"]
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+docker run -it img1 echo "Hello India" # it will not overwrite the ENTRYPOINT and Print Hello World echo Hello India
+
+FROM ubuntu
+ENTRYPOINT ["echo"]
+CMD ["Hello World"]
+docker build . -t  img1   #Created the image from above Dockerfile
+docker run -it img1 # it will return Hello World
+
+
 
 Create an html file in the current directory.(index.html)
 Build the docker file

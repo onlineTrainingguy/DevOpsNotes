@@ -1,0 +1,1 @@
+docker service create --name webservice -d --mode=global --publish=80:80 nginx

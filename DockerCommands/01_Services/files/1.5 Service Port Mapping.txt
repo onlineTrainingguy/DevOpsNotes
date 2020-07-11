@@ -1,0 +1,1 @@
+ docker service --name webservice create -d -p 80:80 nginx
