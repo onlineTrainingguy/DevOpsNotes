@@ -154,7 +154,7 @@ CMD ["Hello World"]
 docker build . -t  img1   #Created the image from above Dockerfile
 docker run -it img1 # it will return Hello World
 
-
+docker build . -f abc -t img8 # abc is the file name which represents the dockerfile contents
 
 Create an html file in the current directory.(index.html)
 Build the docker file
