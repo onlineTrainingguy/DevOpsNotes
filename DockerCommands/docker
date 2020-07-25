@@ -204,9 +204,23 @@ chmod +x /usr/local/bin/docker-compose
  args
   -sleep
   -"1000"
-  
-  To run the compose file
+  --------------------------Create a compose file to run db and we app ( file name should be docker-compose.yml)
+version: '3.3'
+
+services:
+   db:
+      image: ramansharma95/mysql
+   web:
+      depends_on:
+      - db
+      image: ramansharma95/webapp
+ 
+ To execute compose file
  docker-compose up -d
+ To remove the services for docker compose
+ docker-compose down
+ 
+ 
 
 Container Orchestration
   Applications are typically made up of indviually containerized components( microservices) that must be orgainsed on networking level in order
