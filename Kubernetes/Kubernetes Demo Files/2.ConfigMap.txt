@@ -41,7 +41,7 @@ kubectl create configmap nginx-configmap-vol --from-file=file-1.txt --from-file=
 kubectl get configmaps
 kubectl get configmaps nginx-configmap-vol -o yaml
 kubectl describe configmaps nginx-configmap-vol
-
+kubectl create configmap nginx-configmap-vol --from-file=file-1.txt  -o yaml --dry-run | kubectl replace -f -
 ==========================================================
 
 1b.  Consume above "nginx-configmap-vol" configmap inside Pod from "volumes" 
