@@ -2,12 +2,17 @@ git --version
 
 git init
 git add .
-git config color.ui true
 
 git remote add origin https://github.com/ramansharma95/MorningDevops.git
-
 git push origin master
-
+------Revert back the changes
+1. git checkout --file   to revert back the changes for the working directory
+   eg make the changes of a file say 1.txt and it will show as the untracked file..Now you want to revert back these changes then write the command
+   git checkout -- 1.txt
+   git checkout .          to revert back the changes for all the untracked filess
+2. git reset HEAD 1.txt      This command will unstage 1.txt from staging area
+   git reset Head  *         This command will unstage all the files from the staging area
+   
 
 
 1.Create a directory devops and change to directory devops 
