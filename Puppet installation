@@ -112,4 +112,35 @@ ensure => installed,
 
 }
 }
+----create user
+node default{
+   user { 'raman':
+      ensure => present,
+      uid    => '1101',
+      shell  => '/bin/bash',
+   }
+}
+--Create user with class
+class user {
+   user { 'test':
+      ensure => present,
+}
+}
+node default{
+  class {user:}
+}
 
+---Create user with the parameter
+class user_account ($username){
+   user { $username:
+      ensure => present,
+      uid    => '1011',
+      shell  => '/bin/bash',
+      home   => "/home/$username",
+   }
+}
+node default {
+   class { user_account:
+      username => "raman",
+   }
+}
