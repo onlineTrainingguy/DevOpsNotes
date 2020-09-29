@@ -23,24 +23,26 @@ main.yml
 # tasks file for apache
 - include: install.yml
 - include: configure.yml
-- include: service.yml
+
 
 #install.yml
 
 ---
- name: installing httpd
- yum:
-  name: httpd
-  state: present
+ - name: installing httpd
+   apt:
+    name: apache2
+    state: present
+
 
 #configure.yml
 ---
-- name: httpd conf
-  copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+- name: status
+  copy: src=status.txt dest=/tmp/status.txt
   notify:
      restart apache service
 - name: send the file
-  copy: src=index.html dest=/var/www/html/index.html
+  copy: src=test.html dest=/var/www/html/test.html
+
 	
 
 # copy the configuration file to files/ folder
@@ -51,6 +53,12 @@ cp /etc/httpd/conf/httpd.conf .
 ---
 # handlers file for apache
 - name: restart apache service
-  service: name=httpd state=restarted
-  
+  service: name=apache2 state=restarted
+
+#Call the proceudre in the main yaml file  
+  ---
+ - hosts: webservers
+   roles:
+        - apache
+
 
