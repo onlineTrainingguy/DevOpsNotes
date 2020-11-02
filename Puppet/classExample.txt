@@ -1,0 +1,33 @@
+# A class with no parameters
+
+
+class puppet_user{
+  user { 'puppet_user':
+       ensure => present,
+       uid => 1001,
+       home => '/home/puppet_user'
+       }
+}
+node default{
+  include puppet_user
+}
+
+
+# A class with parameters
+
+
+class puppet_user($username){
+  user { $username:
+       ensure => present,
+       uid => 1001,
+       home => '/home/$username'
+       }
+}
+#invoke the class
+node default{
+  class { puppet_user:
+     username => 'puppet_user',
+        }
+}
+
+

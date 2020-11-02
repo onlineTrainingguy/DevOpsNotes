@@ -1,0 +1,114 @@
+
+Step - 1
+Instal ntp ntpdate packages to sync date and time on your servers 
+
+sudo apt update
+sudo apt install -y ntp ntpdate 
+sudo ntpdate -u 0.ubuntu.pool.ntp.org
+
+Step -2
+
+On the master edit the host file and add the IP address of the master itself in the hosts file naming it puppet
+
+Step -3
+
+On the Agent machines add the master IP as puppet and the Agent’s IP address as puppet-agent
+
+Step -4
+
+Follow these steps on both the master and the slave machines
+Puppet uses port 8140 to communicate through ssl. Open the port using ufw command 
+  
+   ufw enable ufw allow 8140
+
+Step -5 ( execute below command on  master and slave machine)
+Add the puppet6 repository on all the machines 
+
+apt update wget https://apt.puppetlabs.com/puppet6-release-bionic.deb dpkg -i puppet6-release-bionic.deb 
+apt update
+
+Step -6 (Execute command on Master Server)
+
+   apt install -y puppetserver
+Step -7 (Master Server)
+
+After the installation, change the memory allocation for Puppet server. The Default setting is 2GB. Set it 1 GB or 512 MB according to the memory allocated to your VM Open the default puppet server file and change the following line 
+
+vi /etc/default/puppetserver
+Change
+JAVA_ARGS="-Xms2g -Xmx2g
+
+to
+
+JAVA_ARGS="-Xms512m -Xmx512m
+
+and save the changes
+
+Step -8 (Master Server)
+
+Edit the puppet.conf file and add the following lines to it 
+
+vi /etc/puppetlabs/puppet/puppet.conf
+
+[main]
+certname = puppet
+server = puppet
+environment = production
+runinterval = 15m
+
+Step -9 ( Master Server)
+
+Now, setup the puppetserver certificate.
+
+/opt/puppetlabs/bin/puppetserver ca setup
+
+Step -10 (Master Server)
+
+Start and enable the puppet server Syntax:
+
+ systemctl start puppetserver 
+ systemctl enable puppetserver
+
+Step -11(Agent Node)
+
+ Install Puppet Agent 
+ apt install -y puppet-agent
+
+Step -12(Agent Node)
+
+Edit the puppet.conf file on agent machine and add the following lines to it Syntax: 
+
+vi /etc/puppetlabs/puppet/puppet.conf
+
+  [main]
+certname = puppetagent
+server = puppet
+environment = production
+runinterval = 15m
+
+Step -13 (Agent Node)
+
+Start and enable the puppet server on the agent machine Syntax: 
+
+/opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
+
+
+Step -14 (Master Node)
+
+First list all the certificates left for signing on the master machine 
+
+Syntax: /opt/puppetlabs/bin/puppetserver ca list
+
+You can choose to either individually sign the certificates all sign them all together Syntax: 
+/opt/puppetlabs/bin/puppetserver ca sign <certName>
+
+ or 
+
+/opt/puppetlabs/bin/puppetserver ca sign --all
+
+Step -15 (Agent Node)
+
+To verify open the agent and use the test command Syntax: 
+
+/opt/puppetlabs/bin/puppet agent --test
+
