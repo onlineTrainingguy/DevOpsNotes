@@ -1,0 +1,19 @@
+apt install pdk
+pdk new module module1
+cd module1
+cd manifests
+
+vi init.pp
+  class module1 {
+
+package { 'apache2':
+   ensure => present,
+}
+}
+
+pdk build module1
+/opt/puppetlabs/bin/puppet module install /etc/puppetlabs/code/environments/production/module1/pkg/ubuntu-module1-0.1.0.tar.gz
+
+site.pp
+class { 'module1': }
+
