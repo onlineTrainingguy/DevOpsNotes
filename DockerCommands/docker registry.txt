@@ -1,0 +1,33 @@
+ mkdir certs
+ cd certs
+ openssl req -newkey rsa:4096 -nodes -sha256 -keyout domain.key -x509 -days 365 -out domain.crt
+ cd /etc/docker/certs.d
+ mkdir repo.docker.local:5000
+ cd repo.docker.local\:5000/
+ cp /home/ubuntu/certs/domain.crt ca.crt
+ systemctl restart docker
+docker container run -d --name secure_registry -p 5000:5000 -v /home/ubuntu/certs/:/certs -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key registry
+
+create image with repo.docker.local:5000 and push it
+
+Basic Authentication
+
+mkdir auth
+docker container run --entrypoint htpasswd registry:2.7.0 -bnB raman password >auth/htpasswd
+
+
+docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry_basic \
+  -v /home/ubuntu/auth:/auth \
+  -v /home/ubuntu/certs:/certs \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  registry:2.7.0
+
+docker login repo.docker.local:5000
+
