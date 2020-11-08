@@ -1,0 +1,4 @@
+sudo apt update
+sudo apt install nagios-nrpe-server nagios-plugins
+sudo nano /etc/nagios/nrpe.cfg
+sudo /etc/init.d/nagios-nrpe-server restart
