@@ -1,4 +1,7 @@
 sudo apt update
 sudo apt install nagios-nrpe-server nagios-plugins
 sudo nano /etc/nagios/nrpe.cfg
-sudo /etc/init.d/nagios-nrpe-server restart
+
+
+Tcp connection check
+/usr/local/nagios/libexec/check_tcp -H localhost -p 22 http://localhost:22
