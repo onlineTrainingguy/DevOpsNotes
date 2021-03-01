@@ -64,4 +64,15 @@
    64  docker exec -it webserver bash
    65  docker stats webserver
    66  docker top webserver
+------------------------Assignment-------------------------------------------
+1.	Create a container called webserver with ubuntu docker image.
+2.	Install apache server in the container(webserver)
+3.	Start apache service in the container
+4.	Access apache default page on the web browser
+5.	Create a new webpage myapp.html on the host machine and copy it to /var/www/html folder in webserver container.
+6.	Access myapp.html page on the browser
+7.	Check how much memory and cpu is consumed by web server containers.
+8.	Stop the container and verify that you are not able to access apache website on browser.
+9.	Start container and now you should be able to access the apache website.
+10.	Remove  webserver container
 
