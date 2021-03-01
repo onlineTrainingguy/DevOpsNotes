@@ -1,4 +1,4 @@
-  1  sudo yum install -y yum-utils
+    1  sudo yum install -y yum-utils
     2  sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
     3   sudo yum install docker-ce docker-ce-cli containerd.io
     4  systemctl status docker
@@ -64,6 +64,57 @@
    64  docker exec -it webserver bash
    65  docker stats webserver
    66  docker top webserver
+   67  history
+   68  sudo docker run -m 4m -dit --name web1 nginx
+   69  sudo docker run -m 8m -dit --name web1 nginx
+   70  docker stats web1
+   71  ls /var/lib/docker/
+   72  docker images
+   73  docker save webimg > myimg.tar
+   74  ls
+   75  docker rm -f $(docker ps -a -q)
+   76  docker rmi webimg
+   77  ls
+   78  docker images
+   79  docker load <myimg.tar
+   80  docker images
+   81  docker container run -itd --name c1 webimg
+   82  docker container ls
+   83  docker export c1 mywebimg
+   84  docker export c1 -o  mywebimg
+   85  docker export c1 -o  mywebimg.tar
+   86  ls
+   87  docker rm -f c1
+   88  docker rmi webimg nginx ubuntu
+   89  docker images
+   90  ls
+   91  docker import mywebimg.tar myimg
+   92  docker images
+   93  docker load < mywebimg.tar
+   94  vi Dockerfile
+   95  docker build -t my-java-app .
+   96  docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=pass -d mysql:8.0
+   97  docker ps
+   98  docker exec -it some-mysql bash
+   99  docker login
+  100  docker logout
+  101  docker login
+  102  docker images
+  103  docker rmi 9dac656d25e5
+  104  docker ps
+  105  docker ps -a
+  106  docker rm d8984ae6f588
+  107  docker rmi 9dac656d25e5
+  108  docker images
+  109  docker push myimg
+  110  docker ps
+  111  docker commit some-mysql ramansharma95/mydb
+  112  docker images
+  113  docker push ramansharma95/mydb
+  114  docker list
+  115  docker --help
+  116  docker images
+
 ------------------------Assignment-------------------------------------------
 1.	Create a container called webserver with ubuntu docker image.
 2.	Install apache server in the container(webserver)
