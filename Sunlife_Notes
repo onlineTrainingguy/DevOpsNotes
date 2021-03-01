@@ -4,3 +4,5 @@
     4  systemctl status docker
     5  systemctl start docker
     6  systemctl status docker
+    7. docker images
+    8. docker image ls
