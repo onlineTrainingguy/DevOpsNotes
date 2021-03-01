@@ -1,4 +1,4 @@
-1  sudo yum install -y yum-utils
+  1  sudo yum install -y yum-utils
     2  sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo
     3   sudo yum install docker-ce docker-ce-cli containerd.io
     4  systemctl status docker
@@ -23,3 +23,45 @@
    23  docker container ls
    24  docker ps -a
    25  docker container ls --all
+   26  history
+   27  docker start c1
+   28  docker container ls
+   29  docker kill c1
+   30  docker ps -a
+   31  docker restart c1
+   32  docker container ls
+   33  docker stop c1
+   34  docker rm c1
+   35  docker ps -a
+   36  docker rm -f c2
+   37  docker container ls --all
+   38  docker container run -it --name c1 -d centos
+   39  docker container ls --all
+   40  docker rmi centos
+   41  docker stop c1
+   42  docker rmi centos
+   43  docker stop c1
+   44  docker rmi centos
+   45  docker rm c1
+   46  docker rmi centos
+   47  docker container -it run --name c1 -d ubuntu
+   48  docker container run -it --name c1 -d ubuntu
+   49  docker container ls
+   50  docker exec -it c1 bash
+   51  docker ps
+   52  docker commit c1 webimg
+   53  docker images
+   54  docker container run -itd --name c2 webimg
+   55  docker exec -it c2 bash
+   56  docker images
+   57  docker ps -a
+   58  docker rm -f c1 c2
+   59  docker container run -itd --name webserver -p 80:80 webimg
+   60  docker container ls
+   61  docker exec -it webserver bash
+   62  vi test.html
+   63  docker cp test.html webserver:/var/www/html
+   64  docker exec -it webserver bash
+   65  docker stats webserver
+   66  docker top webserver
+
