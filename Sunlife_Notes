@@ -148,6 +148,53 @@ docker volume ls     //to list the volumes
 docker run -it --mount source=demo-vol,destination=/app -d ubuntu
 docker run -it --mount source=demo-vol,destination=/test --mount source=demo-vol1,destination=/test1 -d ubuntu
 
+---------------commands---------
+ docker volume --help
+  295  docker volume ls
+  296  docker volume prune
+  297  docker volume ls
+  298  docker volume create demo-vol
+  299  docker volume ls
+  300  ls /var/lib//docker/
+  301  ls /var/lib//docker/volumes/
+  302  docker volume rm demo-vol
+  303  ls /var/lib//docker/volumes/
+  304  docker volume create demo-vol
+  305  docker volume ls
+  306  ls /var/lib//docker/volumes/
+  307  ls /var/lib//docker/volumes/demo-vol/
+  308  ls /var/lib//docker/volumes/demo-vol/_data/
+  309  docker rm -f c1
+  310  docker container run -it --name c1 --mount source=demo-vol,destination=/app -d ubuntu
+  311  docker exec -it c1 bash
+  312  ls /var/lib//docker/volumes/demo-vol/_data/
+  313  docker rm -f c1
+  314  ls /var/lib//docker/volumes/demo-vol/_data/
+  315  docker container run -itd --name c2 --mount source=demo-vol,destination=/demo ubuntu
+  316  docker exec -it c2
+  317  docker exec -it c2 bash
+  318  docker container run -itd --name c3 --mount source=demo-vol,destination=/demo1 ubuntu
+  319  docker exec -it c3 bash
+  320  ls /var/lib//docker/volumes/demo-vol/_data/
+  321  touch /var/lib//docker/volumes/demo-vol/_data/5
+  322  ls /var/lib//docker/volumes/demo-vol/_data/
+  323  docker exec -it c3 bash
+  324  docker volume rm demo-vol
+  325  ls
+  326  rm -ifr /var/lib/docker/volumes/demo-vol/_data/
+  327  ls /var/lib//docker/volumes/demo-vol/_data/
+  328  docker exec -it c2 bash
+  329  ls /var/lib//docker/volumes/demo-vol/_data/
+  330  mkdir /var/lib//docker/volumes/demo-vol/_data
+  331  ls /var/lib//docker/volumes/demo-vol/_data/
+  332  touch /var/lib//docker/volumes/demo-vol/_data/1
+  333  docker exec -it c2 bash
+  334  docker rm -f c2 c3
+  335  docker volume prune
+  336  docker volume ls
+
+---------------------------------
+
 ----------Docker Bind Mount Example
 
 docker run -it -v /home/ubuntu/mount:/demo -d ubuntu
