@@ -362,6 +362,61 @@ Note:- if the file name is not Dockerfile
 docker build . -f abc -t img8 # abc is the file name which represents the dockerfile contents
 -------------------------------------------------------
 
+-------------------Docker compose------------
+
+---Installation
+ 389  sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
+  390  sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
+  391  sudo chmod +x /usr/bin/docker-compose
+  392  docker-compose
+  393  docker-compose --version
+  
+  ---example-1
+  version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+       WORDPRESS_DB_NAME: wordpress
+volumes:
+    db_data: {}
+    
+    ---Example-2
+    
+    version: '3.3'
+
+services:
+   db:
+     image: ramansharma95/mysql
+   webapp:
+     image: ramansharma95/webapp
+     ports:
+       - "84:80"
+
+
+----command to run the docker compose file
+docker-compose up -d
+docker-compose down
 
 
 ------------------------Assignment-------------------------------------------
