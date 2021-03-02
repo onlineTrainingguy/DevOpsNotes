@@ -199,6 +199,21 @@ docker run -it --mount source=demo-vol,destination=/test --mount source=demo-vol
 
 docker run -it -v /home/ubuntu/mount:/demo -d ubuntu
 
+---commands----
+mkdir mydir
+  343  docker container run -it -d --name c4 -v /home/centos/mydir:/app ubuntu
+  344  docker exec -it c4 bash
+  345  ls mydir/
+  346  docker container inspect c4
+  347  cd mydir/`
+
+  348  cd mydir/
+  349  touch 5 6
+  350  ls
+  351  docker exec -it c4 bash
+
+---------------
+
 
 
 
