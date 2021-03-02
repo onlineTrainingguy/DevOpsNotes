@@ -213,7 +213,154 @@ mkdir mydir
   351  docker exec -it c4 bash
 
 ---------------
+------------------------Docker file--------------------
 
+ Docker can build images automatically by reading the instructions from a Dockerfile. A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. Using docker build users can create an automated build that executes several command-line instructions in succession.
+
+Some of the Keyword's definition
+
+FROM
+
+is define th base image on which we are building  eg FROM ubuntu
+
+ADD
+
+is used to add the files to the container being built, ADD <source> <destination in the container>
+
+RUN
+
+is used to add layers to the base image, by installing components.Each RUN statement add a new layer to the docker image
+
+CMD
+
+is used to run the command on start of the container.These commands run when there is no argument specified while running the container.
+
+ENTRYPOINT
+
+is used to strictly run the commands the moment the container intializes. The difference between CMD and ENTRYPOINT is, ENTRYPOINT runs  irrespective of the fact that whether the argument is specified or not.
+
+ENV
+
+is used to define the environment in container.
+
+docker build
+Description
+Build an image from a Dockerfile
+
+sudo docker build -t nonrootimage . # create custom image (nonrootimage)
+
+
+
+Examples.
+
+Create an image which has base image ubuntu and apache2 is to be installed on it and create an index.html file in current directory,  all the files from the current directory is to be copied to /var/www/html folder. Once the container is started it should run the apache service and also create one environment variable called "name" and it should have value "DEVOPS
+
+
+
+FROM ubuntu
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update
+
+RUN apt-get -y install apache2
+
+ADD . /var/www/html
+
+ENTRYPOINT apachectl -D FOREGROUND
+
+ENV name DEVOPS 
+
+
+
+Run below command to build the image
+
+docker build . -t  img1   #Created the image from above Dockerfile
+
+Example 2
+
+Create a Docker file which uses a base image of CentOS 7 and create a user john and change to non-root privilege
+
+
+
+# Base image is CentOS 7
+
+FROM centos:7
+
+# Add a new user "john" with user id 8877
+
+RUN useradd -u 8877 john
+
+# Change to non-root privilege
+
+USER john
+
+
+
+Example 3
+
+#Eample of COPY and ADD
+
+
+
+FROM centos:7.4.1708
+
+RUN mkdir /mydata
+
+COPY myfiles /mydata/myfiles  
+
+ADD myfile2 /mydata/myfile2  
+
+ADD https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz /mydata 
+
+ADD apache-maven-3.6.3-src.tar.gz /mydata/maven
+
+
+
+
+
+# CMD and ENTRYPOINT
+
+FROM ubuntu
+
+CMD echo "Hello World"
+
+
+
+docker build . -t  img1   #Created the image from above Dockerfile
+
+docker run -it img1 # it will return Hello World
+
+docker run -it img1 echo "Hello India" # it will overwrite the CMD and Print Hello India
+
+
+
+FROM ubuntu
+
+ENTRYPOINT ["echo","Hello World"]
+
+docker build . -t  img1   #Created the image from above Dockerfile
+
+docker run -it img1 # it will return Hello World
+
+docker run -it img1 echo "Hello India" # it will not overwrite the ENTRYPOINT and Print Hello World echo Hello India
+
+
+
+FROM ubuntu
+
+ENTRYPOINT ["echo"]
+
+CMD ["Hello World"]
+
+docker build . -t  img1   #Created the image from above Dockerfile
+
+docker run -it img1 # it will return Hello World
+
+Note:- if the file name is not Dockerfile
+
+docker build . -f abc -t img8 # abc is the file name which represents the dockerfile contents
+-------------------------------------------------------
 
 
 
