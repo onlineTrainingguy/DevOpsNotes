@@ -140,6 +140,18 @@
 6. Pull the image with following command ( you can remove the image first and then you can run below command to restore the image)
 
  docker image pull localhost:5000/ubuntu
+ 
+ ------------------------Storage------------------
+ 
+docker volume create demo-vol
+docker volume ls     //to list the volumes
+docker run -it --mount source=demo-vol,destination=/app -d ubuntu
+docker run -it --mount source=demo-vol,destination=/test --mount source=demo-vol1,destination=/test1 -d ubuntu
+
+----------Docker Bind Mount Example
+
+docker run -it -v /home/ubuntu/mount:/demo -d ubuntu
+
 
 
 
