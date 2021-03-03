@@ -681,7 +681,7 @@ spec:
 
   nodeSelector:
 
-     env: “prod”
+     env: prod
 
  
 
