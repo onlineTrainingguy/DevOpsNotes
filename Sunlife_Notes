@@ -578,7 +578,126 @@ kubectl delete svc nginx-pod
 kubectl delete pod nginx-pod
 
 
+-----------------------------LAB2------------------------------
 
+nodeName is the field in PodSpec.It specifies that a pod is to run on a particular node
+
+Example: If you want to run a pod on worker node kwn1, then the pod creation script will be a mentioned below
+
+Step1:- Create a file called nodeName.yaml
+
+#nodeName.yaml
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+  name: podonkwn1
+
+spec:
+
+   containers:
+
+   - name: nginx-container
+
+     image: nginx
+
+   nodeName: kwn1
+
+ 
+
+Step2: Create the pod by running below command
+
+ 
+
+kubectl create -f nodeName.yaml
+
+ 
+
+Step3: Verify the pods are getting created on kwn1 or not by running below command
+
+ 
+
+kubectl get pods -o wide
+
+ 
+
+nodeSelector
+nodeSelector is the simplest recommended form of node selection constraint. nodeSelector is a field of PodSpec. It specifies a map of key-value pairs. For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels (it can have additional labels as well). The most common usage is one key-value pair.
+
+ 
+
+Example: Create a Pod on the worker node which is of production environment, means the worker nodes which has label env=prod
+
+ 
+
+Step1: Check the labels on all the nodes
+
+ 
+
+kubectl get nodes --show-labels
+
+ 
+
+Step2: Check the label on a specific node ( say kwn2)
+
+ 
+
+kubectl get nodes --show-labels kwn2
+
+ 
+
+Step3: Create a label env=prod for a worker node ( say kwn2)
+
+ 
+
+kubectl label nodes kwn2 env=prod
+
+ 
+
+Step4: Create a pod with nodeSelector specification. Create file with name nodeselector.yaml
+
+ 
+
+#nodeselector.yaml
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: podnodeselector
+
+spec:
+
+  containers:
+
+   - name: container1
+
+     image: nginx
+
+  nodeSelector:
+
+     env: “prod”
+
+ 
+
+Step5: Create the pod by running below command
+
+ 
+
+kubectl create -f nodeselector.yaml
+
+ 
+
+Step6: Verify the pod “podselector” is created on kwn2 by running below command
+
+ 
+
+kubectl get pods -o wide
 
 
 
