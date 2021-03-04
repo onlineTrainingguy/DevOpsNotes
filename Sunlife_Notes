@@ -1688,3 +1688,193 @@ spec:
     port: 80
     targetPort: 80
 ------------------------------------------------
+
+--------------Volumes-------------------------
+Kubernetes Volumes (emptyDir,hostPath,Persistence Volume)
+By Raman
+When a Container crashes, kubelet will restart it, but the files will be lost - the Container starts with a clean state. Second, when running Containers together in a Pod it is often necessary to share files between those Containers. The Kubernetes Volume abstraction solves both of these problems.
+
+emptyDir
+An emptyDir volume is first created when a Pod is assigned to a Node, and exists as long as that Pod is running on that node. As the name says, it is initially empty. Containers in the Pod can all read and write the same files in the emptyDir volume, though that volume can be mounted at the same or different paths in each Container. When a Pod is removed from a node for any reason, the data in the emptyDir is deleted forever
+
+Lab
+
+# nginx-emptydir.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-emptydir
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    volumeMounts:
+    - name: test-vol
+      mountPath: /test-mnt
+  volumes:
+  - name: test-vol
+    emptyDir: {}
+
+
+*******************************************************************
+
+2. Create & Display Pod with emptyDir volume
+
+
+
+kubectl create -f nginx-emptydir.yaml
+
+kubectl get po -o wide
+
+kubectl exec nginx-emptydir df /test-mnt
+
+kubectl describe pod nginx-emptydir
+
+
+
+*******************************************************************
+
+3. Cleanup
+
+
+
+kubectl delete po nginx-emptydir
+
+
+
+hostPath
+A hostPath volume mounts a file or directory from the host node's filesystem into your Pod. This is not something that most Pods will need, but it offers a powerful escape hatch for some applications.
+
+LAB
+
+# 1. HostPath YAML file
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-hostpath
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+      volumeMounts:
+      - mountPath: /test-mnt
+        name: test-vol
+  volumes:
+  - name: test-vol
+    hostPath:
+      path: /test-vol
+
+
+
+
+*******************************************************************
+
+# 2. Create and Display HostPath
+
+
+
+kubectl create -f nginx-hostpath.yaml
+
+kubectl get po
+
+kubectl exec nginx-hostpath df /test-mnt
+
+
+
+*******************************************************************
+
+3. Test: Creating "test" file underlying host dir & accessing from from pod
+
+
+
+From HOST:
+
+~~~~~~~~~~
+
+cd /test-vol
+
+echo "From Host" > from-host.txt
+
+cat from-host.txt
+
+
+
+From POD:
+
+~~~~~~~~
+
+kubectl exec nginx-hostpath cat /test-mnt/from-host.txt
+
+4. Test: Creating "test" file inside the POD & accessing from underlying host dir
+
+
+
+From POD:
+
+~~~~~~~~~
+
+kubectl exec nginx-hostpath -it -- /bin/sh
+
+cd /test-mnt
+
+echo "From Pod" > from-pod.txt
+
+cat from-pod.txt
+
+
+
+From Host:
+
+~~~~~~~~~~
+
+cd /test-vol
+
+ls
+
+cat from-pod.txt
+
+
+
+
+
+*******************************************************************
+
+5. Clean up
+
+
+
+kubectl delete po nginx-hostpath
+
+kubectl get po
+
+ls /test-vol
+
+
+
+PersistentVolume (PV)
+A PersistentVolume (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes. It is a resource in the cluster just like a node is a cluster resource. PVs are volume plugins like Volumes, but have a lifecycle independent of any individual Pod that uses the PV. This API object captures the details of the implementation of the storage, be that NFS, iSCSI, or a cloud-provider-specific storage system.
+
+PersistentVolumeClaim (PVC) 
+A PersistentVolumeClaim (PVC) is a request for storage by a user. It is similar to a Pod. Pods consume node resources and PVCs consume PV resources. Pods can request specific levels of resources (CPU and Memory). Claims can request specific size and access modes (e.g., they can be mounted ReadWriteOnce, ReadOnlyMany or ReadWriteMany
+
+#pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-hostpath
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/kube"
+
+#create pv with below command
+kubectl create -f pv.yaml
+---------------------------------------------
