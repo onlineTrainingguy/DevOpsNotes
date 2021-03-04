@@ -1164,3 +1164,120 @@ spec:
 
         memory: "200Mi"
 -------------------------------------------------------
+
+
+----------------Replication Contorller-----------------------------
+By Raman
+A ReplicationController ensures that a specified number of pod replicas are running at any one time. In other words, a ReplicationController makes sure that a pod or a homogeneous set of pods is always up and available.
+
+How a ReplicationController Works
+
+If there are too many pods, the ReplicationController terminates the extra pods. If there are too few, the ReplicationController starts more pods. Unlike manually created pods, the pods maintained by a ReplicationController are automatically replaced if they fail, are deleted, or are terminated. For example, your pods are re-created on a node after disruptive maintenance such as a kernel upgrade. For this reason, you should use a ReplicationController even if your application requires only a single pod.
+
+
+
+LAB
+
+
+
+1. Replication Controller YAML file
+
+
+
+# nginx-rc.yaml  
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-rc
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx
+        ports:
+        - containerPort: 80
+  selector:
+    app: nginx-app
+
+
+
+
+*******************************************************************
+
+# 2. Create and display
+
+
+
+kubectl create -f nginx-rc.yaml
+
+kubectl get po -o wide
+
+kubectl get po -l app=nginx-app
+
+kubectl get rc nginx-rc
+
+kubectl describe rc nginx-rc
+
+
+
+*******************************************************************
+
+# 3. Reschedule
+
+
+
+kubectl get po -o wide --watch
+
+kubectl get po -o wide
+
+kubectl get nodes
+
+
+
+*******************************************************************
+
+# 4. Scaling up cluster
+
+
+
+kubectl scale rc nginx-rc --replicas=5
+
+kubectl get rc nginx-rc
+
+kubectl get po -o wide
+
+
+
+*******************************************************************
+
+# 5. Scalling down
+
+
+
+kubectl scale rc nginx-rc --replicas=3
+
+kubectl get rc nginx-rc
+
+kubectl get po -o wide
+
+
+
+*******************************************************************
+
+# 6. Cleanup
+
+
+
+kubectl delete -f nginx-rc.yaml
+
+kubectl get rc
+
+kubectl get po -l app=nginx-app
+-------------------------------------------------------------------
