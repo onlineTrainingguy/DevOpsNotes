@@ -1091,4 +1091,76 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s http
 
  kubectl --kubeconfig config get pods -n finance
 
+-----------------------Resource Quota------------------
+By Raman
+A resource quota, defined by a ResourceQuota object, provides constraints that limit aggregate resource consumption per namespace. It can limit the quantity of objects that can be created in a namespace by type, as well as the total amount of compute resources that may be consumed by resources in that project.
 
+LAB
+
+apiVersion: v1
+
+kind: ResourceQuota
+
+metadata:
+
+  name: quota-demo1
+
+  namespace: quota-demo-ns
+
+spec:
+
+  hard:
+
+    pods: "2"
+
+
+    configmaps: "1"
+
+
+
+#2
+
+apiVersion: v1
+
+kind: ResourceQuota
+
+metadata:
+
+  name: quota-demo-mem
+
+  namespace: quota-demo-ns
+
+spec:
+
+  hard:
+
+
+    limits.memory: "500Mi"
+
+
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+  name: mem-limit
+
+  namespace: quota-demo-ns
+
+spec:
+
+  containers:
+
+  - name: memlimit 
+
+    image: nginx
+
+    resources:
+
+      limits:
+
+
+        memory: "200Mi"
+-------------------------------------------------------
