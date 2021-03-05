@@ -1,0 +1,10 @@
+-----Splunk Installation on Centos
+1. wget -O splunk-8.1.2-545206cc9f70-Linux-x86_64.tgz 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.1.2&product=splunk&filename=splunk-8.1.2-545206cc9f70-Linux-x86_64.tgz&wget=true'
+2. groupadd splunk
+3. useradd -d /opt/splunk -m -g splunk splunk
+4. tar -xvzf splunk-8.1.2-545206cc9f70-Linux-x86_64.tgz -C /opt
+5.  chown -R splunk: /opt/splunk
+6. su - splunk
+7. cd /opt/splunk/bin
+8. ./splunk start --accept-license
+9. localhost:8000 to access the splunk
