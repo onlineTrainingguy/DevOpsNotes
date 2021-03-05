@@ -1,0 +1,1 @@
+index="history"| stats count by student,maths,physics,chemistry,computer | fields - count | addtotals | addcoltotals
