@@ -1,36 +1,60 @@
-kamalbeg@gmail.com
-Configuration Management Tool
-IaaCode
-
-Inventory:-List of hosts
-Frank--->100 Machine
-         Each every machine and installing Jdk 8 
-		 Ansible-->Angentless
-
-Simple, agentless IT automation
-that anyone can use
 
 ----------------------------Installation of Ansible---------------------------
---Commands to install Ansible on Master node
+--BELOW STEPS ARE TO INSTALL ANSIBLE ON UBUNTU
 
+RUN BELOW COMMANDS ON MASTER ( LOGIN WITH ROOT USER)
+
+1. ssh-keygen
+2. cat /root/.ssh/id_rsa.pub
+   copy the content of this file
+
+GOTO AGENT MACHINE
+
+1. open /root/.ssh/authorized_keys file and copy master ssh key at the end of this file
+
+RUN BELOW COMMANDS ON MASTER 
+
+1. ssh <<agent Ip>>
+2.  Before installing ansible package add ansible repository to your system
+    sudo apt-add-repository ppa:ansible/ansible
+3.  Run the update command before installing to update existing packages 
+    sudo apt-get update
+4.  Now install the ansible package
+    sudo apt-get install ansible
+5.  You can check if you’re on the latest version of ansible by running the     version command
+    sudo ansible --version
+
+SETUP HOST MACHINE ON MASTER
+
+1. To set up hosts you need to edit the hosts file in the ansible directory
+   cd /etc/ansible
+   vi hosts
+
+---BELOW STEPS ARE TO INSTALL ANSIBLE ON CENTOS SYSTEM
+
+RUN BELOW COMMANDS ON MASTER ( LOGIN WITH ROOT USER)
+
+1. ssh-keygen
+2. cat /root/.ssh/id_rsa.pub
+   copy the content of this file
+GOTO AGENT MACHINE
+
+1. open /root/.ssh/authorized_keys file and copy master ssh key at the end of this file
+
+--BELOW STEPS ARE TO INSTALL ANSIBLE
 	yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	yum install ansible
+	ansible --version
 
---Configuration to setup SSH on Client and Master Machine
-  --Remove the comments from the ssh/sshd_config file which is to be overwritten
-	vi etc/ssh/sshd_config
-  -- After making the changes restart the sshd
-		systemctl restart sshd
-  --Generate the public key on Master machine which is to shared with clients
-	ssh-keygen
-  --following file will be created at id_rsa.pub which contains the value of public key
-     cd /root/.ssh
-	 cat id_rsa.pub
-  --Copy the content of id_rsa.pub	  file
-  --Goto Client Machine and got to /root/.ssh folder and append the master's public key to authorized_keys files
 
---Add the hosts(IP addresses or  in hosts file on the master machine under /etc/ansible folder
-  add client hosts 
+
+SETUP HOST MACHINE ON MASTER
+
+1. To set up hosts you need to edit the hosts file in the ansible directory
+   cd /etc/ansible
+   vi hosts
+
+
 
 
 --------------------Ansible Adhoc Commands---------------------------------
