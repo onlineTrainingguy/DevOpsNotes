@@ -1,0 +1,255 @@
+Puppet
+--->it is a configuration management tool available as open-source and Enterprise version.It runs on Unix like systems and Windows Systems.
+--->Puppet is produced by Puppet labs founded by Luke Kanies in 2005.
+--->It is written in Ruby and released as free software under GNU GENEREAL PUBLIC LICENSE until version 2.7.0 and Apache License after that.
+--->Puppet is designed to manage the configuration of Unix-like and Microsoft windows.
+
+How Puppet works
+The information is stored in files called "Puppet manifests" with extension of ".pp".Puppet discovers the system information via a utility called Facter and compiles the puppet manifests into a specific catalog containing resources and resource dependencies which are applied against the target system. Any action taken by puupet are then reported.
+
+Puppet Master
+ it is the service runs on the main server which is used to manage the entire clients to deploy, configure and maintains the infrastructures.
+Puppet Agent
+  Puppet agent is a service runs on client which sends the request the catalog to puppet master and applies it by checking each resource the catalog describes. If it finds that any resource is not in the desired state, it makes the changes necessary to correct them.After applying the catalog, the agen submits a report Puppet Master.
+Catalog
+ it is a document that describes the desired state for one specific server. It lists all the resources that need to be managed, as well as dependencies between them.
+
+Puppet agent nodes and Puppet master communicates via HTTPS with client verification.The Puppet master provides an HTTP interface with various end points are available. When requesting or submitting anything to master, the agent makes HTTPS request to one of the end points.
+
+Manifests
+ are the files with extension ".pp" where we declare all resources to be checked or to be changed. Resources may be files,packages etc
+
+Resources Types
+ A type of package or service or file or user or mount
+ 
+Syntax:
+  type{ 'title':
+         argument => value,
+         otherarg => value
+      }
+
+node default {
+$mypackages = [ 'apache2', 'sudo', 'screen' ]
+
+package { $mypackages: ensure => 'installed' }
+}
+
+node default {
+
+# creating the directory called test
+file{ '/tmp/test':
+     ensure => 'directory'
+}
+
+}
+
+
+node default {
+
+# creating the directory called test
+file{ '/tmp/test1':
+     ensure => 'directory',
+     owner => 'root',
+     group => 'root',
+     mode => '0777',
+}
+
+}
+
+node default {
+
+# remove the given file
+tidy { '/tmp/3.txt': }
+}
+
+eg:
+Ex1  Verify nginx is installed
+ 
+   package{ 'nginx':
+         ensure => present,
+       }
+Ex2  Create a file /tmp/file1.txt
+
+   file{'file1':
+        path=>'/tmp/file1.txt'
+       }
+Ex3 Start a service
+
+   service{ 'httpd':
+           ensure=>running,
+           enable=>true
+          } 
+----
+
+Classes
+  classes are the groups of different resources.
+ 
+class directories {
+
+  # create a directory
+  file { '/etc/site-conf':
+    ensure => 'directory',
+  }
+
+  # a fuller example, including permissions and ownership
+  file { '/var/log/admin-app-log':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'wheel',
+    mode   => '0750',
+  }
+
+  # this example  creates a file
+  file { '/etc/site-conf/':
+    ensure => 'present',
+  }
+}
+Resource type Reference
+  puppet describe file
+  puppet describe --list
+
+          
+  
+------------------PUPPET INSTALLATION ON UBUNTU------------
+
+Installing Puppet Master
+Step 1: Run the following commands for installing Puppet Master
+$ sudo apt-get update
+$ sudo apt-get install wget
+$ wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+$ sudo dpkg -i puppet-release-bionic.deb
+$ sudo apt-get update
+
+$ sudo apt-get install puppet-master
+$ sudo systemctl status puppet-master.service
+
+Add the following lines in the puppet-master configuration file
+Next open port 8140 on the Puppet Master’s firewall
+$ sudo nano /etc/default/puppet-master
+JAVA_ARGS="-Xms512m Xmx512m" 
+$ sudo systemctl restart puppet-master
+$ sudo ufw allow 8140/tcp
+
+Installing Puppet Agent
+
+Step 2: Run the following commands for installing Puppet Agent
+
+$ sudo apt-get update
+$ sudo apt-get install wget
+$ wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+$ sudo dpkg -i puppet-release-bionic.deb
+$ sudo apt-get install puppet
+$ sudo nano /etc/hosts
+   add ip address of the master
+$ sudo systemctl start puppet
+$ sudo systemctl enable puppet
+
+
+Step 3: Make changes to the hosts file which exists in /etc/hosts. And add the Puppet
+Master IP address along with the name “puppet”
+
+$ sudo nano /etc/hosts
+
+Step 4: Create the following directory path:
+
+$ sudo mkdir -p /etc/puppet/code/environments/production/manifests
+
+
+Configuring Puppet Slave
+
+Step 1: Add the entry for Puppet Master in /etc/hosts
+
+Step 2: Finally start the Puppet agent by using the following command. Also, enable the
+service, so that it starts when the computer starts
+
+$ sudo systemctl start puppet
+$ sudo systemctl enable puppet
+
+
+On Master
+
+$ sudo puppet cert list
+
+Step 2: Finally, sign the listed certificate using the following command:
+$ sudo puppet cert sign --all
+
+On master machine create /etc/puppet/code/environments/production/manifests/site.pp
+
+node default{
+
+package {'nginx':
+ensure => installed,
+}
+
+file { '/tmp/status.txt':
+
+content => 'installed',
+mode => '0644',
+}
+}
+
+Goto client machine and run the command
+puppet agent --test
+
+-----------Find the resource types
+puppet resource --types
+puppet resource file /tmp/1.txt
+
+----To set the running interval on client machine
+By default the running interval on the client is 30 mins. but we can change it by changing /etc/puppet/puppet.conf
+[agent]
+server=puppet
+runinterval=1m
+
+Classes
+
+in site.pp
+#---Create testuser
+class addusers
+{
+  user { 'testuser':
+        ensure=>present
+       }
+}
+node default {
+class { addusers:}
+}
+--------------
+Facts
+node default
+
+{
+$message=$facts['os']['family'] ? {
+'RedHat'=> 'running redhat',
+default=> 'running somewhere',
+}
+notify { $message: }
+}
+
+------
+mkdir -p /etc/facter/facts.d
+ cd /etc/facter/facts.d/
+ create file customfact.txt and add content
+customfact="hello world"
+
+Now run following command
+---------
+Templates
+#Create file test.epp
+
+<% | String $text, Boolean $bool | -%>
+Text value <%= $text %>
+
+<% if $bool { -%>
+Bool has true value
+<% } -%>
+
+To validate the syntax
+puppet epp validate test.epp
+To run the template
+puppet epp render test.epp --values '{ text => "Hello world", bool => true }'
+
+facter customfact
+
+Modules:-
+it is the collection of manifest with data( such as facts files and templates) and they have a specific directory structure. Modules are useful to organize puppet code because they allow you to split the code in multiple manifests.It is considered to be best practice to use modules to organize manifests.
