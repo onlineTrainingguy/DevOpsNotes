@@ -1,3 +1,18 @@
+ puppet module generate rp-createuser
+ #init.pp
+ class createuser {
+ user { 'user1':
+     ensure => present,
+    }
+
+}
+
+ 
+# site.pp
+ node default {
+ include 'createuser'
+}
+
 apt install pdk
 pdk new module module1
 cd module1
