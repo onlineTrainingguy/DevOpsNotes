@@ -30,4 +30,33 @@ node default{
         }
 }
 
+# Class example with if condition and multiple parameters
+class user($username, $test) {
+
+     user { $username:
+            ensure => present,
+            managehome => true,
+          }
+     if $test =='testing' {
+          file { '/tmp/2.txt':
+           content => $test,
+          }
+        }
+     else
+    {
+         file { '/tmp/3.txt':
+           content => $test,
+          }
+
+    }
+}
+
+node default {
+       class { 'user':
+               username => 'raman',
+               test => 'notesting' ,
+             }
+
+}
+
 
