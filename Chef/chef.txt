@@ -1,0 +1,76 @@
+wget https://packages.chef.io/files/stable/chef-workstation/21.2.278/ubuntu/20.04/chef-workstation_21.2.278-1_amd64.deb
+dpkg -i chef-workstation_21.2.278-1_amd64.deb
+-----Verify the Installation
+chef -v
+--------Uninstall 
+sudo dpkg -P chef-workstation
+
+
+
+-------------------------------------------------------------------
+Create first reciepe
+-------------------------------------------------------------------
+- Create file hello.rb
+
+file '/tmp/hello.txt' do
+ content 'testing'
+end
+
+---Execute the script
+ chef-client -z hello.rb
+-------------------------------------------------------------------------
+
+- Install apache (package.rb)
+package 'apache2' do
+        action  :install
+end
+----Execute Script
+  chef-client -z package.rb
+--------------------------------------------------------------------------
+- UnInstall apache (package.rb)
+package 'apache2' do
+        action  :purge
+end
+----Execute Script
+  chef-client -z package.rb
+--------------------------------------------------------------------------
+- setup.rb
+
+package 'tree' do
+        action :install
+end
+
+package 'ntp'
+
+file '/etc/motd' do
+        content 'This server is the property of ...'
+end
+
+service 'ntp' do
+        action [:enable, :start]
+end
+
+----Execute Script
+  chef-client -z setup.rb
+---------------------------------------------------------------------------
+
+--------Chef Cookbook Examples
+
+chef --help
+chef generate --help
+chef generate cookbook --help
+mkdir cookbooks
+chef generate cookbook cookbooks/workstation
+cp setup.rb cookbooks/workstation/recipes/
+chef-client -z --runlist "workstation::setup"
+chef-client -z -r "recipe[workstation::setup]"
+
+----How to include a recipe in another recipe
+open default.rb file and add following code
+
+include_recipe 'workstation::setup'
+
+To Execute it run the following command
+chef-client -z -r "recipe[workstation]"
+
+
